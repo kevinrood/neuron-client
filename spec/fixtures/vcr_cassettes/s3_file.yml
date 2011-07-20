@@ -1,0 +1,221 @@
+---
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :post
+    uri: http://127.0.0.1:3000/s3_files.json?api_key=
+    body: !!null 
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-type:
+      - application/json
+      content-length:
+      - '77'
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 201
+      message: Created
+    headers:
+      location:
+      - http://127.0.0.1:3000/s3_files/14
+      content-type:
+      - application/json; charset=utf-8
+      cache-control:
+      - no-cache
+      x-ua-compatible:
+      - IE=Edge
+      x-runtime:
+      - '0.067139'
+      server:
+      - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+      date:
+      - Wed, 20 Jul 2011 22:09:23 GMT
+      content-length:
+      - '157'
+      set-cookie:
+      - _neuron-admin_session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiIlOWNjYmY1YTMxZjE1ZTg2YmI4OWIxZmY1ZmJkOTNmMzM%3D--d8721ac8475f99f21ce1726337ce3dc6570ee361;
+        path=/; HttpOnly
+    body: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-20T22:09:23Z","filename":"filename","id":14,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-20T22:09:23Z"}}'
+    http_version: '1.1'
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :get
+    uri: http://127.0.0.1:3000/s3_files.json?api_key=
+    body: !!null 
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-type:
+      - application/json
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 200
+      message: OK
+    headers:
+      content-type:
+      - application/json; charset=utf-8
+      etag:
+      - ! '"fa7070e53112e61619a0f53d917d99e7"'
+      cache-control:
+      - max-age=0, private, must-revalidate
+      x-ua-compatible:
+      - IE=Edge
+      x-runtime:
+      - '0.104567'
+      server:
+      - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+      date:
+      - Wed, 20 Jul 2011 22:09:23 GMT
+      content-length:
+      - '725'
+    body: ! '[{"s3_file":{"bucket":"legal","created_at":"2011-07-20T20:53:18Z","filename":"legal","id":11,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-20T20:53:18Z"}},{"s3_file":{"bucket":"test","created_at":"2011-07-20T22:01:01Z","filename":"file5kqqlaqs12p84sr5b4nqfcc66oiddl9ob6k8wwi0izn1vl3aye","id":12,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-20T22:01:01Z"}},{"s3_file":{"bucket":"test","created_at":"2011-07-20T22:07:57Z","filename":"file47s8gkz0i4jt8efk47bz22ceggn2yfdcue1droev1imjyoppkv_2","id":13,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-20T22:07:57Z"}},{"s3_file":{"bucket":"test","created_at":"2011-07-20T22:09:23Z","filename":"filename","id":14,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-20T22:09:23Z"}}]'
+    http_version: '1.1'
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :get
+    uri: http://127.0.0.1:3000/s3_files/14.json?api_key=
+    body: !!null 
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-type:
+      - application/json
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 200
+      message: OK
+    headers:
+      content-type:
+      - application/json; charset=utf-8
+      etag:
+      - ! '"82de26d0323cc7f9ae7ca9834a9cdad6"'
+      cache-control:
+      - max-age=0, private, must-revalidate
+      x-ua-compatible:
+      - IE=Edge
+      x-runtime:
+      - '0.060063'
+      server:
+      - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+      date:
+      - Wed, 20 Jul 2011 22:09:24 GMT
+      content-length:
+      - '157'
+    body: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-20T22:09:23Z","filename":"filename","id":14,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-20T22:09:23Z"}}'
+    http_version: '1.1'
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :get
+    uri: http://127.0.0.1:3000/s3_files/14.json?api_key=
+    body: !!null 
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-type:
+      - application/json
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 200
+      message: OK
+    headers:
+      content-type:
+      - application/json; charset=utf-8
+      etag:
+      - ! '"82de26d0323cc7f9ae7ca9834a9cdad6"'
+      cache-control:
+      - max-age=0, private, must-revalidate
+      x-ua-compatible:
+      - IE=Edge
+      x-runtime:
+      - '0.059891'
+      server:
+      - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+      date:
+      - Wed, 20 Jul 2011 22:09:24 GMT
+      content-length:
+      - '157'
+    body: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-20T22:09:23Z","filename":"filename","id":14,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-20T22:09:23Z"}}'
+    http_version: '1.1'
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :put
+    uri: http://127.0.0.1:3000/s3_files/14.json?api_key=
+    body: !!null 
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-type:
+      - application/json
+      content-length:
+      - '37'
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 200
+      message: OK
+    headers:
+      content-type:
+      - application/json; charset=utf-8
+      etag:
+      - ! '"99914b932bd37a50b983c5e7c90ae93b"'
+      cache-control:
+      - max-age=0, private, must-revalidate
+      x-ua-compatible:
+      - IE=Edge
+      x-runtime:
+      - '0.109019'
+      server:
+      - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+      date:
+      - Wed, 20 Jul 2011 22:09:24 GMT
+      content-length:
+      - '2'
+      set-cookie:
+      - _neuron-admin_session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiIlMTM4NmUyZTg3NjMyZmEyODVlYTYzOWMzMDY2ZGVjN2Y%3D--aa8493cea97d5cd46b28e8e4ed590a78c43f527f;
+        path=/; HttpOnly
+    body: ! '{}'
+    http_version: '1.1'
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :get
+    uri: http://127.0.0.1:3000/s3_files/14.json?api_key=
+    body: !!null 
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-type:
+      - application/json
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 200
+      message: OK
+    headers:
+      content-type:
+      - application/json; charset=utf-8
+      etag:
+      - ! '"469eafd0f989f48861aed220036e8b54"'
+      cache-control:
+      - max-age=0, private, must-revalidate
+      x-ua-compatible:
+      - IE=Edge
+      x-runtime:
+      - '0.058650'
+      server:
+      - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+      date:
+      - Wed, 20 Jul 2011 22:09:24 GMT
+      content-length:
+      - '159'
+    body: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-20T22:09:23Z","filename":"filename_2","id":14,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-20T22:09:24Z"}}'
+    http_version: '1.1'

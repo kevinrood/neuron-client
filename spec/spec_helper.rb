@@ -8,7 +8,15 @@ SimpleCov.start do
   add_group "Models", "lib"
 end
 
-Neuron::Client::API.configure do |config|
-  config.admin_url = "https://example.com"
-  config.admin_key = "secret"
+Neuron::Client::API.configure do |c|
+  c.admin_url = "http://127.0.0.1:3000"
+  c.admin_key = "secret"
+end
+
+VCR.config do |c|
+  c.cassette_library_dir = File.join(File.dirname(__FILE__),'fixtures','vcr_cassettes')
+  c.stub_with :fakeweb
+  c.default_cassette_options = {:record => :new_episodes}
+  c.ignore_localhost = false
+  c.allow_http_connections_when_no_cassette = false
 end

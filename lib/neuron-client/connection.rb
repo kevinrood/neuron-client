@@ -12,7 +12,7 @@ module Neuron
       def query_string(attrs={})
         q = []
         {:api_key => @key}.merge(attrs).each do |key, value|
-          q << "#{key}=#{CGI::escape(value)}"
+          q << "#{key}=#{value.nil? ? '' : CGI::escape(value)}"
         end
         q.join("&")
       end
