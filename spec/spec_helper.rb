@@ -1,12 +1,14 @@
+require 'simplecov'
+SimpleCov.start do
+  add_filter "/spec/"
+  add_group "Models", "lib"
+end
+
 require 'rubygems'
 require 'bundler'
 
 Bundler.require(:default, :test, :development)
 
-SimpleCov.start do
-  add_filter "/spec/"
-  add_group "Models", "lib"
-end
 
 Neuron::Client::API.configure do |c|
   c.admin_url = "http://127.0.0.1:3000"
