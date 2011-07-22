@@ -27,7 +27,7 @@ module Neuron
           rescue
             raise "Invalid admin_url: #{@config.admin_url}"
           end
-          self.connection = Connection.new(@config.admin_url, @config.key)
+          self.connection = Connection.new(@config.admin_url, @config.admin_key)
           true
         end
 
