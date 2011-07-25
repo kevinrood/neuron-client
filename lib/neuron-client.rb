@@ -10,3 +10,15 @@ require "neuron-client/real_time_stats"
 require "neuron-client/report"
 require "neuron-client/s3_file"
 require "neuron-client/zone"
+
+class Object
+  def blank?
+    return true if self.nil?
+    return true if self.respond_to?(:empty) && self.empty?
+    false
+  end
+
+  def present?
+    !self.blank?
+  end
+end

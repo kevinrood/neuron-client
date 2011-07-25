@@ -18,21 +18,31 @@ module Neuron
       end
 
       def get(path="", attrs={})
-        RestClient.get("#{@url}/#{path}.json?#{query_string(attrs)}", :content_type => :json, :accept => :json) do |response, request, result, &block|
+        format = attrs.delete(:format) || :json
+        RestClient.get("#{@url}/#{[path, format].select(&:present?).join(".")}?#{query_string(attrs)}", 
+          format.present? ? {:content_type => format, :accept => format} : {}) do |response, request, result, &block|
+          # follow redirection
+          if [301, 302, 307].include? response.code
+            response.follow_redirection(request, result, &block)
+          end
+
           case response.code
           when 200
-            return Yajl.load(response.to_str)
+            return (format == :json ? Yajl.load(response.to_str) : response.to_str)
           else
-            raise "Error : #{response.code} - #{response.to_str}"
+            raise "Error : #{response.inspect}"
           end
         end
       end
 
       def post(path="", form={}, attrs={})
-        RestClient.post("#{@url}/#{path}.json?#{query_string(attrs)}", Yajl.dump(form), :content_type => :json, :accept => :json) do |response, request, result, &block|
+        format = attrs.delete(:format) || :json
+        RestClient.post("#{@url}/#{[path, format].select(&:present?).join(".")}?#{query_string(attrs)}", 
+          (format == :json ? Yajl.dump(form) : form), 
+          format.present? ? {:content_type => format, :accept => format} : {}) do |response, request, result, &block|
           case response.code
           when 201
-            return Yajl.load(response.to_str)
+            return (format == :json ? Yajl.load(response.to_str) : response.to_str)
           else
             raise "Error : #{response.code} - #{response.to_str}"
           end
@@ -40,10 +50,13 @@ module Neuron
       end
 
       def put(path="", form={}, attrs={})
-        RestClient.put("#{@url}/#{path}.json?#{query_string}", Yajl.dump(form), :content_type => :json, :accept => :json) do |response, request, result, &block|
+        format = attrs.delete(:format) || :json
+        RestClient.put("#{@url}/#{[path, format].select(&:present?).join(".")}?#{query_string}", 
+          (format == :json ? Yajl.dump(form) : form), 
+          format.present? ? {:content_type => format, :accept => format} : {}) do |response, request, result, &block|
           case response.code
           when 200
-            return Yajl.load(response.to_str)
+            return (format == :json ? Yajl.load(response.to_str) : response.to_str)
           else
             raise "Error : #{response.code} - #{response.to_str}"
           end
@@ -51,10 +64,12 @@ module Neuron
       end
 
       def delete(path="", attrs={})
-        RestClient.delete("#{@url}/#{path}.json?#{query_string(attrs)}", :content_type => :json, :accept => :json) do |response, request, result, &block|
+        format = attrs.delete(:format) || :json
+        RestClient.delete("#{@url}/#{[path, format].select(&:present?).join(".")}?#{query_string(attrs)}", 
+          format.present? ? {:content_type => format, :accept => format} : {}) do |response, request, result, &block|
           case response.code
           when 200
-            return Yajl.load(response.to_str)
+            return (format == :json ? Yajl.load(response.to_str) : response.to_str)
           else
             raise "Error : #{response.code} - #{response.to_str}"
           end

@@ -9,7 +9,7 @@ module Neuron
       attr_accessor :template, :parameters, :status
 
       def result
-        self.class.connection.get("reports/#{id}/result")
+        self.class.connection.get("reports/#{id}/result", :format => "")
       end
     end
   end
