@@ -6,7 +6,7 @@ module Neuron
       resources_name("reports")
 
       attr_accessor :errors
-      attr_accessor :template, :parameters
+      attr_accessor :template, :parameters, :status
 
       def result
         self.class.connection.get("reports/#{id}/result")
