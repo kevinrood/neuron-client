@@ -44,7 +44,7 @@ module Neuron
           when 201
             return (format == :json ? Yajl.load(response.to_str) : response.to_str)
           when 422
-            throw :errors, Yajl.load(response.to_str) 
+            throw :errors, format == :json ? Yajl.load(response.to_str) : response.to_str
           else
             raise "Error : #{response.code} - #{response.to_str}"
           end
@@ -60,7 +60,7 @@ module Neuron
           when 200
             return (format == :json ? Yajl.load(response.to_str) : response.to_str)
           when 422
-            throw :errors, Yajl.load(response.to_str)
+            throw :errors, format == :json ? Yajl.load(response.to_str) : response.to_str
           else
             raise "Error : #{response.code} - #{response.to_str}"
           end
