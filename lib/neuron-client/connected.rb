@@ -8,7 +8,7 @@ module Neuron
       end
 
       def attributes
-        self.class.attributes
+        self.class.attributes || []
       end
 
       def to_hash
@@ -24,19 +24,29 @@ module Neuron
       end
 
       def save
-        if new_record?
-          response = self.class.connection.post("#{self.class.resources_name}", {self.class.resource_name => self.to_hash})
-        else
-          response = self.class.connection.put("#{self.class.resources_name}/#{id}", {self.class.resource_name => self.to_hash})
-          self.id = response[self.resource_name]['id']
+        @errors = catch :errors do
+          if new_record?
+            response = self.class.connection.post("#{self.class.resources_name}", {self.class.resource_name => self.to_hash})
+            self.id = response[self.class.resource_name]['id']
+          else
+            response = self.class.connection.put("#{self.class.resources_name}/#{id}", {self.class.resource_name => self.to_hash})
+          end
+          []
         end
+
+        @errors.empty?
       end
 
       def update_attributes(attrs={})
-        response = self.class.connection.put("#{self.class.resources_name}/#{id}", {self.class.resource_name => attrs})
-        attrs.each do |key, value|
-          self.send("#{key}=", value) if self.respond_to?("#{key}=")
+        @errors = catch :errors do
+          response = self.class.connection.put("#{self.class.resources_name}/#{id}", {self.class.resource_name => attrs})
+          attrs.each do |key, value|
+            self.send("#{key}=", value) if self.respond_to?("#{key}=")
+          end
+          []
         end
+
+        @errors.empty?
       end
 
       def destroy
@@ -45,6 +55,7 @@ module Neuron
 
       def self.included(base)
         base.send(:attr_accessor, :id)
+        base.send(:attr_accessor, :errors)
         base.extend(ClassMethods)
       end
 
@@ -97,6 +108,13 @@ module Neuron
         end
 
         def create(attrs={})
+          @errors = catch (:errors) do
+            return create!(attrs)
+          end
+          nil
+        end
+
+        def create!(attrs={})
           response = self.connection.post("#{self.resources_name}", {self.resource_name => attrs})
           self.new(response[self.resource_name])
         end

@@ -168,6 +168,132 @@ module Neuron
       end
     end
 
+    describe Connected do
+      class ConnectedTest
+        include Connected
+        resource_name 'connection'
+        resources_name 'connection'
+      end
+
+      before(:each) do
+        @connection = stub(:connection)
+        API.stub(:connection).and_return(@connection)
+      end
+      
+      describe "update_attributes" do
+        it "should return false when errors occur for updated objects" do
+          @connection.should_receive(:put).with("connection/1", {'connection' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          ConnectedTest.new(:id => 1).update_attributes({}).should be_false
+        end
+
+        it "should provide access to errors when validation fails" do
+          @connection.should_receive(:put).with("connection/1", {'connection' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          c = ConnectedTest.new(:id => 1)
+          c.update_attributes({}).should be_false
+          c.errors.should == {:error => "is required"}
+        end
+
+        it "should return true when errors do not occure for updated objects" do
+          @connection.should_receive(:put).with("connection/1", {'connection' => {}})
+
+          ConnectedTest.new(:id => 1).update_attributes({}).should be_true
+        end
+      end
+
+      describe "save" do
+        it "should return false when errors occur for new objects" do
+          @connection.should_receive(:post).with("connection", {'connection' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          ConnectedTest.new.save.should be_false
+        end
+
+        it "should provide access to errors when validation fails" do
+          @connection.should_receive(:post).with("connection", {'connection' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          c = ConnectedTest.new
+          c.save.should be_false
+          c.errors.should == {:error => "is required"}
+        end
+
+        it "should return true when errors do not occur for new objects" do
+          @connection.should_receive(:post).with("connection", {'connection' => {}}).and_return({'connection' => {:id => 1}})
+
+          ConnectedTest.new.save.should be_true
+        end 
+
+        it "should return false when errors occur for existing objects" do
+          @connection.should_receive(:put).with('connection/1', {'connection' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          ConnectedTest.new(:id => 1).save.should be_false
+        end
+
+        it "should provide access to errors when validation fails" do
+          @connection.should_receive(:put).with("connection/1", {'connection' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          c = ConnectedTest.new(:id => 1)
+          c.save.should be_false
+          c.errors.should == {:error => "is required"}
+        end
+
+        it "should return true when errors do not occur for existing objects" do
+          @connection.should_receive(:put).with("connection/1", {'connection' => {}})
+
+          ConnectedTest.new(:id => 1).save.should be_true
+        end
+      end
+
+      describe "create" do
+        it "should return nil when errors occur" do
+          @connection.should_receive(:post).with("connection", {'connection' => {}}) do
+            throw :errors, {:error => "is_required"}
+          end
+
+          ConnectedTest.create({}).should be_nil
+        end
+
+        it "should return the created object when no errors occur" do
+          @connection.should_receive(:post).with("connection", {'connection' => {}}).and_return({'connection' => {:id => 1}})
+
+          ConnectedTest.create({}).should be_a ConnectedTest
+        end
+      end
+
+      describe "create!" do
+        it "should return nil when errors occur" do
+          @connection.should_receive(:post).with("connection", {'connection' => {}}) do
+            throw :errors, {:error => "is_required"}
+          end
+
+          errors = catch(:errors) do
+            ConnectedTest.create!({})
+            nil
+          end
+          errors.should_not be_nil
+          errors.should == {:error => 'is_required'}
+        end
+
+        it "should return the created object when no errors occur" do
+          @connection.should_receive(:post).with("connection", {'connection' => {}}).and_return({'connection' => {:id => 1}})
+
+          ConnectedTest.create!({}).should be_a ConnectedTest
+        end
+      end
+    end
+
     describe Connection do
       before(:each) do
         @connection = Connection.new('http://neuron.admin', "my_api_key")
@@ -209,6 +335,16 @@ module Neuron
             @connection.post("test", {:data => 1})
           end.should raise_error
         end
+
+        it "should throw :errors if validation fails" do
+          FakeWeb.register_uri(:post, "http://neuron.admin/test.json?api_key=my_api_key", :body => Yajl.dump({:my_field => 'is_required'}), :status => ["422", "Errors"])
+          errors = catch(:errors) do
+            value = @connection.post("test", {:data => 1})
+            nil
+          end
+          errors.should_not be_nil
+          errors.should == {'my_field' => 'is_required'}
+        end
       end
 
       describe "put" do
@@ -224,6 +360,16 @@ module Neuron
           lambda do
             @connection.put("test", {:data => 1})
           end.should raise_error
+        end
+
+        it "should throw :errors if validation fails" do
+          FakeWeb.register_uri(:put, "http://neuron.admin/test.json?api_key=my_api_key", :body => Yajl.dump({:my_field => 'is_required'}), :status => ["422", "Errors"])
+          errors = catch(:errors) do
+            value = @connection.put("test", {:data => 1})
+            nil
+          end
+          errors.should_not be_nil
+          errors.should == {'my_field' => 'is_required'}
         end
       end
 
