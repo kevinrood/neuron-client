@@ -11,10 +11,11 @@ module Neuron
         self.class.attributes || []
       end
 
-      def to_hash
+      def to_hash(*except)
         hash = {}
-        attributes.each do |attribute|
-          hash[attribute] = send(attribute)
+        attributes.reject{|a| except.collect(&:to_sym).include?(a.to_sym)}.each do |attribute|
+          value = send(attribute)
+          hash[attribute] = value unless value.nil?
         end
         hash
       end
@@ -26,10 +27,10 @@ module Neuron
       def save
         @errors = catch :errors do
           if new_record?
-            response = self.class.connection.post("#{self.class.resources_name}", {self.class.resource_name => self.to_hash})
+            response = self.class.connection.post("#{self.class.resources_name}", {self.class.resource_name => self.to_hash(:errors, :updated_at, :created_at)})
             self.id = response[self.class.resource_name]['id']
           else
-            response = self.class.connection.put("#{self.class.resources_name}/#{id}", {self.class.resource_name => self.to_hash})
+            response = self.class.connection.put("#{self.class.resources_name}/#{id}", {self.class.resource_name => self.to_hash(:errors, :updated_at, :created_at)})
           end
           []
         end
@@ -46,6 +47,10 @@ module Neuron
           []
         end
 
+        @errors.empty?
+      end
+
+      def valid?
         @errors.empty?
       end
 

@@ -10,7 +10,7 @@ module Neuron
           :redirect_url,
         # video
           :video_api_url, :video_setup_xml, :video_flv_url, 
-          :video_clickthru_url, :video_companion_ad_html, :social_links,
+          :video_clickthru_url, :video_companion_ad_html, :social_links, :social_links_attributes,
         # caps
           :frequency_cap_limit, :frequency_cap_window, :overall_cap, 
           :daily_cap, :day_partitions, :ideal_impressions_per_hour,
