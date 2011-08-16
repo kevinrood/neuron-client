@@ -3,6 +3,8 @@ module Neuron
     module Connected
       def initialize(attrs=nil)
         (attrs || {}).each do |k,v|
+          next if k.to_s == 'id' && self.class.remote_id != 'id'
+          k = 'id' if k.to_s == self.class.remote_id
           self.send("#{k}=", v) if self.respond_to?("#{k}=")
         end
       end
@@ -28,7 +30,7 @@ module Neuron
         @errors = catch :errors do
           if new_record?
             response = self.class.connection.post("#{self.class.resources_name}", {self.class.resource_name => self.to_hash(:errors, :updated_at, :created_at)})
-            self.id = response[self.class.resource_name]['id']
+            self.id = response[self.class.resource_name][self.class.remote_id]
           else
             response = self.class.connection.put("#{self.class.resources_name}/#{id}", {self.class.resource_name => self.to_hash(:errors, :updated_at, :created_at)})
           end
@@ -100,6 +102,13 @@ module Neuron
             @resources_name = "#{@resource_name}s"
           end
           @resources_name
+        end
+
+        def remote_id(remote_id=nil)
+          if remote_id
+            @remote_id = remote_id.to_s
+          end
+          @remote_id || 'id'
         end
 
         def find(id)
