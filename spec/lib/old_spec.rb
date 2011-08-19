@@ -86,6 +86,16 @@ module Neuron
           ad.id.should == 1
           ad.name.should == "Ad 1"
         end
+
+        it "returns the created Ad With AdTrackers" do
+          @attrs = {:name => "Ad 1", :ad_trackers => [{:url => "http://www.google.com", :event => "video.impression"}]}
+          @response = {'ad' => @attrs.merge({:id => 1})}
+          @connection.should_receive(:post).and_return(@response)
+          ad = Ad.create(@attrs)
+          ad.id.should == 1
+          ad.name.should == "Ad 1"
+          ad.ad_trackers.should have(1).things
+        end
       end
 
       describe "update_attributes" do
@@ -94,6 +104,13 @@ module Neuron
           ad = Ad.new(attrs)
           @connection.should_receive(:put).with("ads/1", {'ad' => {:name => "Ad 2"}})
           ad.update_attributes(:name => "Ad 2")
+        end
+
+        it "makes a put call with AdTrackers" do
+          attrs = {:id => 1, :name => "Ad 1", :ad_trackers => [{:id => 1, :advertiser_id => 1, :url => "http://testurl.com", :event => "video.impression"}]}
+          ad = Ad.new(attrs)
+          @connection.should_receive(:put).with("ads/1", {'ad' => {:ad => {:ad_trackers => [{:url => "http://testurl.com/new"}]}}})
+          ad.update_attributes(:ad => {:ad_trackers => [{:url => "http://testurl.com/new"}]})
         end
       end
     end

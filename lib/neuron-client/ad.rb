@@ -5,7 +5,8 @@ module Neuron
       resource_name("ad")
       resources_name("ads")
 
-      attr_accessor :name, :approved, :response_type, :parameters, :geo_target_ids,
+      attr_accessor :name, :approved, :response_type, :parameters, :geo_target_ids, :ad_trackers, 
+          :ad_trackers_attributes,             
         # redirect
           :redirect_url,
         # video
