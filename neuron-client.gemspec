@@ -19,12 +19,18 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_dependency "rest-client", ">= 1.6.3"
   s.add_dependency "yajl-ruby", ">= 0.8.2"
+  s.add_dependency "activesupport", ">= 3.0.10"
+  s.add_dependency "tzinfo", ">= 0.3.29"
+  s.add_dependency "i18n", ">= 0.6.0"
+
   s.add_development_dependency "rspec", ">= 2.6.0"
   s.add_development_dependency "simplecov", ">= 0.4.2"
-  s.add_development_dependency("rb-fsevent", ">= 0.4.1") if RUBY_PLATFORM =~ /darwin/i
-  s.add_development_dependency "guard", ">= 0.5.1"
+  s.add_development_dependency("rb-fsevent", ">= 0.4.3.1") if RUBY_PLATFORM =~ /darwin/i
+  s.add_development_dependency "guard", ">= 0.6.2"
   s.add_development_dependency "guard-bundler", ">= 0.1.3"
-  s.add_development_dependency "guard-rspec", ">= 0.4.0"
+  s.add_development_dependency "guard-rspec", ">= 0.4.2"
   s.add_development_dependency "fakeweb", ">= 1.3.0"
-  s.add_development_dependency "vcr", ">= 1.10.2"
+  s.add_development_dependency "vcr", ">= 1.11.1"
+  s.add_development_dependency "timecop", ">= 0.3.5"
+  s.add_development_dependency "chronic", ">= 0.6.2"
 end

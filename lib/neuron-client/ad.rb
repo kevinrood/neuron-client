@@ -2,6 +2,7 @@ module Neuron
   module Client
     class Ad
       include Connected
+      include AdCalculations
       resource_name("ad")
       resources_name("ads")
 
