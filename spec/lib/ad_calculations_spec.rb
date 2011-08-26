@@ -2,7 +2,7 @@
 module Neuron
   module Client
 
-    class FancyAd 
+    class FakeAd 
       include AdCalculations
       attr_accessor :start_datetime, :end_datetime, :time_zone, :day_partitions,
         :daily_cap, :overall_cap, :ideal_impressions_per_hour, :total_impressed,
@@ -21,7 +21,7 @@ module Neuron
 
       context "given an Ad with date range Sat, 01 Jan 2011, 00:00 -> Tue, 01 Feb 2011, 12:00; Beijing time; Day parted for 9:00 - 17:00, M-F; Daily cap of 10; Overall cap of 100; total_impressed of 50; today_impressed of 5" do
         before(:each) do
-          @ad = FancyAd.new(
+          @ad = FakeAd.new(
             :start_datetime => Time.new(2011,1,1,0,0,0,"+08:00"),
             :end_datetime => Time.new(2011,2,1,12,0,0,"+08:00"),
             :time_zone => "Beijing",
@@ -87,7 +87,7 @@ module Neuron
 
       describe ".active?" do
         it "should call calculate_active?" do
-          @ad = FancyAd.new
+          @ad = FakeAd.new
           @ad.should_receive(:calculate_active?).and_return(:result)
 
           @ad.active?.should == :result
@@ -96,7 +96,7 @@ module Neuron
 
       describe ".pressure" do
         it "should call calculate_pressure" do
-          @ad = FancyAd.new
+          @ad = FakeAd.new
           @ad.should_receive(:calculate_pressure).and_return(:result)
 
           @ad.pressure.should == :result
@@ -112,7 +112,7 @@ module Neuron
         context "when daily_cap is present" do
           context "and daily_cap precludes overall_cap from being met" do
             it "should calculate the overall pressure" do
-              ad = FancyAd.new(:daily_cap => 10)
+              ad = FakeAd.new(:daily_cap => 10)
               ad.stub(:daily_cap_precludes_overall_cap?).and_return(true)
               ad.should_receive(:calculate_overall_pressure)
               ad.should_not_receive(:calculate_today_pressure)
@@ -122,7 +122,7 @@ module Neuron
           end
           context "and daily_cap does not preclude the overall_cap from being met" do
             it "should calculate the pressure for just today" do
-              ad = FancyAd.new(:daily_cap => 10)
+              ad = FakeAd.new(:daily_cap => 10)
               ad.stub(:daily_cap_precludes_overall_cap?).and_return(false)
               ad.should_not_receive(:calculate_overall_pressure)
               ad.should_receive(:calculate_today_pressure)
@@ -134,7 +134,7 @@ module Neuron
         context "when daily_cap is not present" do
           context "when overall_cap is blank or end_datetime is blank" do
             it "should use the ideal_impressions_per_hour" do
-              ad = FancyAd.new(:overall_cap => 100, :ideal_impressions_per_hour => 99.9)
+              ad = FakeAd.new(:overall_cap => 100, :ideal_impressions_per_hour => 99.9)
               ad.should_not_receive(:calculate_overall_pressure)
               ad.should_not_receive(:calculate_today_pressure)
 
@@ -143,7 +143,7 @@ module Neuron
           end
           context "when overall_cap is not blank and end_datetime is not blank" do
             it "should calculate the overall pressure" do
-              ad = FancyAd.new(:overall_cap => 100, :end_datetime => Time.now + 1.month)
+              ad = FakeAd.new(:overall_cap => 100, :end_datetime => Time.now + 1.month)
               ad.should_receive(:calculate_overall_pressure)
               ad.should_not_receive(:calculate_today_pressure)
 
@@ -156,7 +156,7 @@ module Neuron
 
       describe ".start_in_time_zone" do
         it "should return start_datetime, time zone adjusted" do
-          result = FancyAd.new(
+          result = FakeAd.new(
             :start_datetime => Time.utc(2011, 2, 1, 1, 59),
             :time_zone => 'Eastern Time (US & Canada)'
           ).send(:start_in_time_zone)
@@ -169,7 +169,7 @@ module Neuron
       describe ".end_in_time_zone" do
         context "when end_datetime is present" do
           it "should return end_datetime, time zone adjusted" do
-            result = FancyAd.new(
+            result = FakeAd.new(
               :end_datetime => Time.utc(2011, 2, 1, 1, 59),
               :time_zone => 'Eastern Time (US & Canada)'
             ).send(:end_in_time_zone)
@@ -180,41 +180,41 @@ module Neuron
         end
         context "when end_datetime is not present" do
           it "should return nil" do
-            FancyAd.new(:end_datetime => nil).send(:end_in_time_zone).should be_nil
+            FakeAd.new(:end_datetime => nil).send(:end_in_time_zone).should be_nil
           end
         end
       end
 
       describe ".daily_capped?" do
         it "should be false when daily_cap is nil" do
-          FancyAd.new(:daily_cap => nil).send(:daily_capped?).should be_false
+          FakeAd.new(:daily_cap => nil).send(:daily_capped?).should be_false
         end
         it "should be true when daily_cap is a positive integer > zero" do
-          FancyAd.new(:daily_cap => 42).send(:daily_capped?).should be_true
+          FakeAd.new(:daily_cap => 42).send(:daily_capped?).should be_true
         end
       end
 
       describe ".overall_capped?" do
         it "should be false when overall_cap is nil" do
-          FancyAd.new(:overall_cap => nil).send(:overall_capped?).should be_false
+          FakeAd.new(:overall_cap => nil).send(:overall_capped?).should be_false
         end
         it "should be true when overall_cap is a positive integer > zero" do
-          FancyAd.new(:overall_cap => 42).send(:overall_capped?).should be_true
+          FakeAd.new(:overall_cap => 42).send(:overall_capped?).should be_true
         end
       end
 
       describe ".partitioned?" do
         it "should be false when day_partitions is nil" do
-          FancyAd.new(:day_partitions => nil).send(:partitioned?).should be_false
+          FakeAd.new(:day_partitions => nil).send(:partitioned?).should be_false
         end
         it "should be true when day_partitions is 168 character string of Ts and Fs." do
           p = ("T"*100 + "F"*68).split('').shuffle.join
-          FancyAd.new(:day_partitions => p).send(:partitioned?).should be_true
+          FakeAd.new(:day_partitions => p).send(:partitioned?).should be_true
         end
       end
       
       def within_date_range
-        FancyAd.new(:start_datetime => @start, :end_datetime => @end).send(:within_date_range?, @now)
+        FakeAd.new(:start_datetime => @start, :end_datetime => @end).send(:within_date_range?, @now)
       end
 
       describe ".within_date_range?(date)" do
@@ -299,7 +299,7 @@ module Neuron
       describe ".partitioned_hour?(time)" do
         context "when day partitions exist" do
           before(:all) do
-            @ad = FancyAd.new(:day_partitions => [
+            @ad = FakeAd.new(:day_partitions => [
               "TTTTTTTTTTFTTTTTTTTTTTTT", # Sunday
               "TTTTTTTTTTTTTTTFTTTTTTTT", # Monday
               "FTTTTTTTTTTTTTTTTTTTTTTT", # Tuesday
@@ -371,7 +371,7 @@ module Neuron
       def partitioned_day?(time)
         nine_to_five = "F"*9 + "T"*8 + "F"*7
         no_hours = "F" * 24
-        ad = FancyAd.new(:day_partitions => [nine_to_five, nine_to_five, no_hours, nine_to_five, nine_to_five, nine_to_five, no_hours].join)
+        ad = FakeAd.new(:day_partitions => [nine_to_five, nine_to_five, no_hours, nine_to_five, nine_to_five, nine_to_five, no_hours].join)
         ad.send(:partitioned_day?, time)
       end
       describe ".partitioned_day?(time)" do
@@ -413,12 +413,12 @@ module Neuron
         context "when not daily capped" do
           context "and not overall capped" do
             it "should return false" do
-              FancyAd.new(:daily_cap => nil, :overall_cap => nil).send(:cap_met?, 10, 10).should be_false
+              FakeAd.new(:daily_cap => nil, :overall_cap => nil).send(:cap_met?, 10, 10).should be_false
             end
           end
           context "and overall cap is 10" do
             before(:each) do
-              @ad = FancyAd.new(:daily_cap => nil, :overall_cap => 10)
+              @ad = FakeAd.new(:daily_cap => nil, :overall_cap => 10)
             end
             context "and total_impressed = 9" do
               it "should return false" do
@@ -440,7 +440,7 @@ module Neuron
         context "when daily cap is 10" do
           context "and not overall capped" do
             before(:each) do
-              @ad = FancyAd.new(:daily_cap => 10, :overall_cap => nil)
+              @ad = FakeAd.new(:daily_cap => 10, :overall_cap => nil)
             end
             context "and today_impressed = 9" do
               it "should return false" do
@@ -460,7 +460,7 @@ module Neuron
           end
           context "and overall cap is 100" do
             before(:each) do
-              @ad = FancyAd.new(:daily_cap => 10, :overall_cap => 100)
+              @ad = FakeAd.new(:daily_cap => 10, :overall_cap => 100)
             end
             context "and total < 100, today < 10" do
               it "should return false" do
@@ -490,7 +490,7 @@ module Neuron
         @time = Time.now
         @total = 500
         @today = 100
-        ad = FancyAd.new(:daily_cap => @daily_cap, :overall_cap => @overall_cap, :end_datetime => @end_datetime)
+        ad = FakeAd.new(:daily_cap => @daily_cap, :overall_cap => @overall_cap, :end_datetime => @end_datetime)
         ad.stub(:remaining_impressions_via_daily_cap).with(@time, @today).and_return(@remaining_via_daily_cap)
         ad.stub(:remaining_impressions_via_overall_cap).with(@total).and_return(@remaining_via_overall_cap)
         ad.send(:daily_cap_precludes_overall_cap?, @time, @total, @today)
@@ -546,7 +546,7 @@ module Neuron
 
       describe ".remaining_impressions_via_overall_cap(total_impressed)" do
         context "when overall_cap = 100" do
-          before(:each) { @ad = FancyAd.new(:overall_cap => 100) }
+          before(:each) { @ad = FakeAd.new(:overall_cap => 100) }
           context "when total_impressed = 0" do
             it "returns 100" do
               @ad.send(:remaining_impressions_via_overall_cap, 0).should == 100
@@ -572,7 +572,7 @@ module Neuron
 
       describe ".remaining_impressions_today(today_impressed)" do
         context "when daily_cap = 100" do
-          before(:each) { @ad = FancyAd.new(:daily_cap => 100) }
+          before(:each) { @ad = FakeAd.new(:daily_cap => 100) }
           context "when today_impressed = 0" do
             it "returns 100" do
               @ad.send(:remaining_impressions_today, 0).should == 100
@@ -599,7 +599,7 @@ module Neuron
       describe ".remaining_impressions_via_daily_cap(time, today_impressed)" do
         context "when daily_cap is 100, ad has 5 days remaining (including today), and 30 remaining impressions today" do
           it "returns 430" do
-            ad = FancyAd.new(:daily_cap => 100)
+            ad = FakeAd.new(:daily_cap => 100)
             ad.stub(:remaining_days).with(:time).and_return(5)
             ad.stub(:remaining_impressions_today).with(:today_impressed).and_return(30)
 
@@ -611,7 +611,7 @@ module Neuron
       describe ".calculate_today_pressure(time, today_impressed)" do
         context "when there are 3 hours and 12 impressions remaining today" do
           it "should return a pressure of 8 (impressions/hr)" do
-            ad = FancyAd.new
+            ad = FakeAd.new
             ad.stub(:remaining_hours_today).with(:time).and_return(3)
             ad.stub(:remaining_impressions_today).with(:today_impressed).and_return(12)
 
@@ -620,7 +620,7 @@ module Neuron
         end
         context "when there are 0 hours and 12 impressions remaining today" do
           it "should return a pressure of 0 (impressions/hr)" do
-            ad = FancyAd.new
+            ad = FakeAd.new
             ad.stub(:remaining_hours_today).with(:time).and_return(0)
             ad.stub(:remaining_impressions_today).with(:today_impressed).and_return(12)
 
@@ -632,7 +632,7 @@ module Neuron
       describe ".calculate_overall_pressure(time, total_impressed)" do
         context "when there are 3 hours and 12 impressions remaining overall" do
           it "should return a pressure of 4 (impressions/hr)" do
-            ad = FancyAd.new
+            ad = FakeAd.new
             ad.stub(:remaining_hours).with(:time).and_return(3)
             ad.stub(:remaining_impressions_via_overall_cap).with(:total_impressed).and_return(12)
 
@@ -641,7 +641,7 @@ module Neuron
         end
         context "when there are 0 hours and 12 impressions remaining overall" do
           it "should return a pressure of 0 (impressions/hr)" do
-            ad = FancyAd.new
+            ad = FakeAd.new
             ad.stub(:remaining_hours).with(:time).and_return(0)
             ad.stub(:remaining_impressions_via_overall_cap).with(:total_impressed).and_return(12)
 
@@ -651,7 +651,7 @@ module Neuron
       end
 
       def remaining_days(time)
-        FancyAd.new(
+        FakeAd.new(
           :start_datetime => @start,
           :end_datetime => @end,
           :day_partitions => @day_partitions).send(:remaining_days, time.in_time_zone("Beijing"))
@@ -762,7 +762,7 @@ module Neuron
         context "when time is on or after ad's end_datetime" do
           it "should return zero" do
             @end = Time.at(1234567890)
-            a = FancyAd.new(:end_datetime => @end)
+            a = FakeAd.new(:end_datetime => @end)
             a.send(:remaining_hours, @end).should == 0
             a.send(:remaining_hours, @end + 1.day).should == 0
           end
@@ -772,14 +772,14 @@ module Neuron
             context "when time is before ad's start_datetime" do
               it "returns the number of hours between the ad's start and end" do
                 @end = Time.at(1234567890)
-                a = FancyAd.new(:start_datetime => @end - 3.days, :end_datetime => @end, :day_partitions => nil)
+                a = FakeAd.new(:start_datetime => @end - 3.days, :end_datetime => @end, :day_partitions => nil)
                 a.send(:remaining_hours, @end - 5.days).should == 24*3
               end
             end
             context "when time is after the ad's start_datetime" do
               it "should return the number of hours between the given time and the ad's end" do
                 @end = Time.at(1234567890)
-                a = FancyAd.new(:start_datetime => @end - 5.days, :end_datetime => @end, :day_partitions => nil)
+                a = FakeAd.new(:start_datetime => @end - 5.days, :end_datetime => @end, :day_partitions => nil)
                 a.send(:remaining_hours, @end - 3.days).should == 24*3
               end
             end
@@ -793,7 +793,7 @@ module Neuron
             end
             context "when time is before ad's start_datetime, and date range is from Monday @ 9:30am to Friday @ 6pm" do
               it "should return 50.5 hours" do
-                a = FancyAd.new(:start_datetime => Chronic.parse("Monday @ 9:30am"),
+                a = FakeAd.new(:start_datetime => Chronic.parse("Monday @ 9:30am"),
                                 :end_datetime => Chronic.parse("Friday @ 6pm"),
                                 :day_partitions => @day_partitions)
                 a.send(:remaining_hours, Chronic.parse("1 month ago")).should == 50.5
@@ -801,7 +801,7 @@ module Neuron
             end
             context "when time is before ad's start_datetime, and date range is from Monday @ 6pm to Friday @ 9:30am" do
               it "should return 45.5 hours" do
-                a = FancyAd.new(:start_datetime => Chronic.parse("Monday @ 6pm"),
+                a = FakeAd.new(:start_datetime => Chronic.parse("Monday @ 6pm"),
                                 :end_datetime => Chronic.parse("Friday @ 9:30am"),
                                 :day_partitions => @day_partitions)
                 a.send(:remaining_hours, Chronic.parse("1 month ago")).should == 45.5
@@ -809,7 +809,7 @@ module Neuron
             end
             context "when time is before ad's start_datetime, and date range is from Monday @ 6pm to Three Mondays later @ 6am" do
               it "should return 246 (12 * 7 * 3 - 6) hours" do
-                a = FancyAd.new(:start_datetime => Chronic.parse("Monday @ 6pm"),
+                a = FakeAd.new(:start_datetime => Chronic.parse("Monday @ 6pm"),
                                 :end_datetime => Chronic.parse("Monday @ 6am") + 3.weeks,
                                 :day_partitions => @day_partitions)
                 a.send(:remaining_hours, Chronic.parse("1 month ago")).should == 12 * 7 * 3 - 6
@@ -817,7 +817,7 @@ module Neuron
             end
             context "when the date range is really long" do
               it "should not take a long time to compute" do
-                a = FancyAd.new(:start_datetime => Chronic.parse("2010-01-01 1am"),
+                a = FakeAd.new(:start_datetime => Chronic.parse("2010-01-01 1am"),
                                 :end_datetime => Chronic.parse("2020-01-07 5am"),
                                 :day_partitions => @day_partitions)
                 started = Time.now.to_f
@@ -832,7 +832,7 @@ module Neuron
       end
 
       def remaining_hours_today(time)
-        @ad = FancyAd.new(
+        @ad = FakeAd.new(
           :start_datetime => @start,
           :end_datetime => @end,
           :day_partitions => @day_partitions)
@@ -1007,7 +1007,7 @@ module Neuron
       end
 
       def beginning_of_week(time)
-        FancyAd.new.send(:beginning_of_week, time)
+        FakeAd.new.send(:beginning_of_week, time)
       end
       describe ".beginning_of_week(time)" do
         context "time is on sunday morning at midnight" do
@@ -1061,7 +1061,7 @@ module Neuron
       end
 
       def beginning_of_hour(time)
-        FancyAd.new.send(:beginning_of_hour, time)
+        FakeAd.new.send(:beginning_of_hour, time)
       end
       describe ".beginning_of_hour(time)" do
         before(:all) { @one_pm = Chronic.parse('1:00pm')}
@@ -1083,7 +1083,7 @@ module Neuron
       end
 
       def partitioned_hours(beginning, ending)
-        FancyAd.new(:day_partitions => @day_partitions).send(:partitioned_hours, beginning, ending)
+        FakeAd.new(:day_partitions => @day_partitions).send(:partitioned_hours, beginning, ending)
       end
       describe ".partitioned_hours(beginning, ending)" do
         before(:all) do
