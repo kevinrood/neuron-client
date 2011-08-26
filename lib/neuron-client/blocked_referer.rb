@@ -1,7 +1,8 @@
 module Neuron
   module Client
     class BlockedReferer
-      include Connected
+      include Base
+
       resource_name("blocked_referer")
       resources_name("blocked_referers")
 

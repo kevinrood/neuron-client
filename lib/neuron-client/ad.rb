@@ -1,8 +1,9 @@
 module Neuron
   module Client
     class Ad
-      include Connected
       include AdCalculations
+      include Base
+
       resource_name("ad")
       resources_name("ads")
 
@@ -19,8 +20,10 @@ module Neuron
         # range
           :start_datetime, :end_datetime, :time_zone,
         # timestamps
-          :created_at, :updated_at
-      
+          :created_at, :updated_at,
+        # deliveries
+          :total_impressed, :today_impressed
+
       def self.stringify_day_partitions(days)
         result = ""
         168.times do |i|
@@ -29,13 +32,6 @@ module Neuron
         result
       end
 
-      def recent(statistic, parameters)
-        self.class.connection.get("ads/#{id}/recent/#{statistic}", parameters)
-      end
-
-      def unlink(ad_id)
-        self.class.connection.delete("ads/#{id}/zones/#{ad_id}")
-      end
     end
   end
 end
