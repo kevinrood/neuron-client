@@ -9,11 +9,13 @@ module Neuron
 
         module ClassMethods
           def find(id)
-            cached_json = self.connection.get(cache_key(id))
-            (cached_json.present? ? self.new(Yajl.load(cached_json)[self.resource_name]) : nil)
+            zone = nil
+            cached_json = self.connection.get(membase_key(id))
+            zone = self.new(Yajl.load(cached_json)[self.resource_name]) if cached_json.present?
+            zone
           end
 
-          def cache_key(id)
+          def membase_key(id)
             "Zone:#{id}"
           end
         end
