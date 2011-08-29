@@ -20,9 +20,7 @@ module Neuron
         # range
           :start_datetime, :end_datetime, :time_zone,
         # timestamps
-          :created_at, :updated_at,
-        # deliveries
-          :total_impressed, :today_impressed
+          :created_at, :updated_at
 
       def self.stringify_day_partitions(days)
         result = ""

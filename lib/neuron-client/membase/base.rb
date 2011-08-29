@@ -1,5 +1,3 @@
-require 'dalli'
-
 module Neuron
   module Client
     module Membase

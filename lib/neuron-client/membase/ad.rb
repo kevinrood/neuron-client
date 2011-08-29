@@ -5,14 +5,14 @@ module Neuron
 
         def total_impressed
           key = "count_delivery_ad_#{self.id}"
-          self.connection.get(key).to_f
+          Neuron::Client::Ad.connection.get(key).to_f
         end
 
         def today_impressed
           now_adjusted_for_ad_time_zone = Time.now.in_time_zone(self.time_zone)
           formatted_date = now_adjusted_for_ad_time_zone.strftime('%Y%m%d') # format to YYYYMMDD
           key = "count_delivery_#{formatted_date}_ad_#{self.id}"
-          self.connection.get(key).to_f
+          Neuron::Client::Ad.connection.get(key).to_f
         end
 
         def self.included(base)
