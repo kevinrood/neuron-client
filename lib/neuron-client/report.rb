@@ -1,7 +1,8 @@
 module Neuron
   module Client
     class Report
-      include Connected
+      include Base
+
       resource_name("report")
       resources_name("reports")
 
@@ -12,9 +13,6 @@ module Neuron
         @state
       end
 
-      def result
-        self.class.connection.get("reports/#{id}/result", :format => "")
-      end
     end
   end
 end

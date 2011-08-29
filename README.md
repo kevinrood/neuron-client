@@ -5,11 +5,13 @@ Neuron Client Gem
 Setup
 =====
 
-    Neuron::Client::API.configure do |config|
-      config.admin_url = "https://example.com"
-      config.admin_key = "secret"
-    end
+Connect to the admin server for read/write access to exposed models:
 
+    Neuron::Client::API.configure {|config| config.connection_type = :admin; config.admin_url = "https://example.com"; config.admin_key = "secret"}
+
+Connect to the Membase (or Memcached) Server for limited read access to some exposed models:
+
+    Neuron::Client::API.configure {|config| config.connection_type = :membase; config.membase_servers = '127.0.0.1:11211';}
 
 Zones
 =====

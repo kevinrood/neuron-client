@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "activesupport", ">= 3.0.10"
   s.add_dependency "tzinfo", ">= 0.3.29"
   s.add_dependency "i18n", ">= 0.6.0"
+  s.add_dependency "dalli", ">= 1.0.5"
 
   s.add_development_dependency "rspec", ">= 2.6.0"
   s.add_development_dependency "simplecov", ">= 0.4.2"

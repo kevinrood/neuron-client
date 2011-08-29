@@ -1,7 +1,8 @@
 module Neuron
   module Client
     class BlockedUserAgent
-      include Connected
+      include Base
+
       resource_name("blocked_user_agent")
       resources_name("blocked_user_agents")
 
