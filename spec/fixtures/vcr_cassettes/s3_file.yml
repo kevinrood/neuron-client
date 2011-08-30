@@ -37,7 +37,46 @@
       set-cookie:
       - _neuron-admin_session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiIlNTkyMGNkZGRkZGEzMmI3ODFiMDhlZjI3ZjZjN2Y5ZTY%3D--abc9759030ac57f081014793dd0a18200acd40ce;
         path=/; HttpOnly
-    body: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+    body: !str
+      str: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+      net_http_res: &30964600 !ruby/object:Net::HTTPCreated
+        http_version: '1.0'
+        code: '201'
+        message: Created
+        header:
+          location:
+          - http://127.0.0.1:3000/s3_files/1
+          content-type:
+          - application/json; charset=utf-8
+          cache-control:
+          - no-cache
+          x-ua-compatible:
+          - IE=Edge
+          x-runtime:
+          - '2.156203'
+          server:
+          - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+          date:
+          - Tue, 26 Jul 2011 21:15:03 GMT
+          content-length:
+          - '156'
+          set-cookie:
+          - _neuron-admin_session=BAh7BkkiD3Nlc3Npb25faWQGOgZFRiIlNTkyMGNkZGRkZGEzMmI3ODFiMDhlZjI3ZjZjN2Y5ZTY%3D--abc9759030ac57f081014793dd0a18200acd40ce;
+            path=/; HttpOnly
+        body: !str
+          str: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+          net_http_res: *30964600
+          args: &30979260
+            :method: :post
+            :url: http://127.0.0.1:3000/s3_files.json?api_key=secret
+            :payload: ! '{"s3_file":{"bucket":"test","filename":"filename","purpose":"RAW_EVENT_LOG"}}'
+            :headers:
+              :content_type: :json
+              :accept: :json
+          code: 201
+        read: true
+      args: *30979260
+      code: 201
     http_version: '1.1'
 - !ruby/struct:VCR::HTTPInteraction
   request: !ruby/struct:VCR::Request
@@ -72,7 +111,42 @@
       - Tue, 26 Jul 2011 21:15:03 GMT
       content-length:
       - '158'
-    body: ! '[{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}]'
+    body: !str
+      str: ! '[{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}]'
+      net_http_res: &30899300 !ruby/object:Net::HTTPOK
+        http_version: '1.0'
+        code: '200'
+        message: OK
+        header:
+          content-type:
+          - application/json; charset=utf-8
+          etag:
+          - ! '"f28f9f731f02abb52de52eeb140f3904"'
+          cache-control:
+          - max-age=0, private, must-revalidate
+          x-ua-compatible:
+          - IE=Edge
+          x-runtime:
+          - '0.058083'
+          server:
+          - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+          date:
+          - Tue, 26 Jul 2011 21:15:03 GMT
+          content-length:
+          - '158'
+        body: !str
+          str: ! '[{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}]'
+          net_http_res: *30899300
+          args: &30918140
+            :method: :get
+            :url: http://127.0.0.1:3000/s3_files.json?api_key=secret
+            :headers:
+              :content_type: :json
+              :accept: :json
+          code: 200
+        read: true
+      args: *30918140
+      code: 200
     http_version: '1.1'
 - !ruby/struct:VCR::HTTPInteraction
   request: !ruby/struct:VCR::Request
@@ -107,7 +181,42 @@
       - Tue, 26 Jul 2011 21:15:03 GMT
       content-length:
       - '156'
-    body: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+    body: !str
+      str: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+      net_http_res: &30863640 !ruby/object:Net::HTTPOK
+        http_version: '1.0'
+        code: '200'
+        message: OK
+        header:
+          content-type:
+          - application/json; charset=utf-8
+          etag:
+          - ! '"67aa857a0fae3ef759591bfd7c6ce984"'
+          cache-control:
+          - max-age=0, private, must-revalidate
+          x-ua-compatible:
+          - IE=Edge
+          x-runtime:
+          - '0.058488'
+          server:
+          - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+          date:
+          - Tue, 26 Jul 2011 21:15:03 GMT
+          content-length:
+          - '156'
+        body: !str
+          str: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+          net_http_res: *30863640
+          args: &30882500
+            :method: :get
+            :url: http://127.0.0.1:3000/s3_files/1.json?api_key=secret
+            :headers:
+              :content_type: :json
+              :accept: :json
+          code: 200
+        read: true
+      args: *30882500
+      code: 200
     http_version: '1.1'
 - !ruby/struct:VCR::HTTPInteraction
   request: !ruby/struct:VCR::Request
@@ -142,7 +251,42 @@
       - Tue, 26 Jul 2011 21:15:03 GMT
       content-length:
       - '156'
-    body: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+    body: !str
+      str: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+      net_http_res: &30800000 !ruby/object:Net::HTTPOK
+        http_version: '1.0'
+        code: '200'
+        message: OK
+        header:
+          content-type:
+          - application/json; charset=utf-8
+          etag:
+          - ! '"67aa857a0fae3ef759591bfd7c6ce984"'
+          cache-control:
+          - max-age=0, private, must-revalidate
+          x-ua-compatible:
+          - IE=Edge
+          x-runtime:
+          - '0.103646'
+          server:
+          - WEBrick/1.3.1 (Ruby/1.9.2/2011-07-09)
+          date:
+          - Tue, 26 Jul 2011 21:15:03 GMT
+          content-length:
+          - '156'
+        body: !str
+          str: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+          net_http_res: *30800000
+          args: &30814500
+            :method: :get
+            :url: http://127.0.0.1:3000/s3_files/1.json?api_key=secret
+            :headers:
+              :content_type: :json
+              :accept: :json
+          code: 200
+        read: true
+      args: *30814500
+      code: 200
     http_version: '1.1'
 - !ruby/struct:VCR::HTTPInteraction
   request: !ruby/struct:VCR::Request
@@ -218,4 +362,42 @@
       content-length:
       - '158'
     body: ! '{"s3_file":{"bucket":"test","created_at":"2011-07-26T21:15:03Z","filename":"filename_2","id":1,"purpose":"RAW_EVENT_LOG","updated_at":"2011-07-26T21:15:03Z"}}'
+    http_version: '1.1'
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :put
+    uri: http://127.0.0.1:3000//1.json?api_key=secret
+    body: !!null 
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      content-type:
+      - application/json
+      content-length:
+      - '30'
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 404
+      message: Not Found
+    headers:
+      content-type:
+      - text/html
+      content-length:
+      - '627'
+      x-runtime:
+      - '0.299115'
+      connection:
+      - keep-alive
+      server:
+      - thin 1.2.11 codename Bat-Shit Crazy
+    body: ! "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n  <title>Action
+      Controller: Exception caught</title>\n  <style>\n    body { background-color:
+      #fff; color: #333; }\n\n    body, p, ol, ul, td {\n      font-family: verdana,
+      arial, helvetica, sans-serif;\n      font-size:   13px;\n      line-height:
+      18px;\n    }\n\n    pre {\n      background-color: #eee;\n      padding: 10px;\n
+      \     font-size: 11px;\n    }\n\n    a { color: #000; }\n    a:visited { color:
+      #666; }\n    a:hover { color: #fff; background-color:#000; }\n  </style>\n</head>\n<body>\n\n<h1>Routing
+      Error</h1>\n<p><pre>No route matches &quot;/1.json&quot;</pre></p>\n\n\n\n</body>\n</html>\n"
     http_version: '1.1'

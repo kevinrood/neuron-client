@@ -10,7 +10,8 @@ require 'bundler'
 Bundler.require(:default, :test, :development)
 
 
-Neuron::Client::API.configure do |c|
+Neuron::Client::API.default_api.configure do |c|
+  c.connection_type = :admin
   c.admin_url = "http://127.0.0.1:3000"
   c.admin_key = "secret"
 end
