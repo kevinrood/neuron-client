@@ -3,8 +3,8 @@ module Neuron
     module AdCalculations
 
       # This module expects the following methods to be defined:
-      # start_datetime (Time, or nil)
-      # end_datetime (Time, or nil)
+      # start_datetime (Time, String, or nil)
+      # end_datetime (Time, String, or nil)
       # time_zone (String)
       # day_partitions (String, or nil, length = 7*24, matches /^[TF]+$/)
       # daily_cap (FixNum, or nil)
@@ -48,12 +48,20 @@ module Neuron
 
       private
 
+      def in_ad_time_zone(time)
+        if time.present?
+          (time.is_a?(String) ? Time.parse(time) : time).in_time_zone(time_zone)
+        end
+      rescue
+        nil
+      end
+
       def start_in_time_zone
-        start_datetime.present? ? start_datetime.in_time_zone(time_zone) : nil
+        in_ad_time_zone(start_datetime)
       end
 
       def end_in_time_zone
-        end_datetime.present? ? end_datetime.in_time_zone(time_zone) : nil
+        in_ad_time_zone(end_datetime)
       end
 
       def daily_capped?
@@ -73,8 +81,8 @@ module Neuron
       end
 
       def within_date_range?(time)
-        return false if start_datetime.present? && time < start_datetime
-        return false if end_datetime.present? && time >= end_datetime
+        return false if start_datetime.present? && time < start_in_time_zone
+        return false if end_datetime.present? && time >= end_in_time_zone
         true
       end
 
