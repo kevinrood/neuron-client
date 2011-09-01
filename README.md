@@ -38,6 +38,8 @@ Create a new API, configure and use it for one specific model:
 Zones
 =====
 
+*Note: many finder methods are not available when using a Membase connection.  Objects are read-only when using a Membase connection.
+
 Create a zone:
 
     zone = Neuron::Client::Model::Zone.new(:slug => 'test', :response_type => 'Redirect')
