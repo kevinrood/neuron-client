@@ -11,7 +11,7 @@ module Neuron
         configure_admin_connection if config.connection_type == :admin
         configure_membase_connection if config.connection_type == :membase
 
-        true
+        self
       end
 
       def connection_type

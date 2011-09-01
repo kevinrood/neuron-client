@@ -13,7 +13,7 @@ module Neuron
               :created_at, :updated_at, :ad_links
 
           def find_ad(ad_id)
-            Ad.find(ad_id)
+            Neuron::Client::Model::Ad.find(ad_id)
           end
         end
       end

@@ -40,20 +40,20 @@ Zones
 
 Create a zone:
 
-    zone = Neuron::Client::Zone.new(:slug => 'test', :response_type => 'Redirect')
+    zone = Neuron::Client::Model::Zone.new(:slug => 'test', :response_type => 'Redirect')
     zone.save
 
 ... or simply:
     
-    Neuron::Client::Zone.create(:slug => 'test', :response_type => 'Redirect')
+    Neuron::Client::Model::Zone.create(:slug => 'test', :response_type => 'Redirect')
 
 List all zones:
 
-    Neuron::Client::Zone.all # => Array of Zone objects (with limited attributes)
+    Neuron::Client::Model::Zone.all # => Array of Zone objects (with limited attributes)
 
 Find a zone by ID:
 
-    Neuron::Client::Zone.find(zone_id)
+    Neuron::Client::Model::Zone.find(zone_id)
 
 Update a zone:
 
