@@ -8,7 +8,7 @@ module Neuron
           resource_name("s3_file")
           resources_name("s3_files")
 
-          attr_accessor :bucket, :filename, :purpose, :created_at, :updated_at
+          attr_accessor :bucket, :filename, :purpose, :filesize, :created_at, :updated_at
         end
       end
     end
