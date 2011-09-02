@@ -4,7 +4,7 @@ module Neuron
       module Admin
         module Base
           def attributes
-            self.class.attributes || []
+            self.class.superclass.attributes || []
           end
 
           def to_hash(*except)
@@ -55,7 +55,7 @@ module Neuron
           end
 
           def self.included(base)
-            base.send(:attr_accessor, :errors)
+            base.superclass.send(:attr_accessor, :errors)
             base.extend(ClassMethods)
           end
 
