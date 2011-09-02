@@ -1,4 +1,5 @@
 require 'dalli'
+require 'forwardable'
 
 module Neuron
   module Client
