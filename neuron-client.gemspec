@@ -19,10 +19,11 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_dependency "rest-client", "~> 1.6.3"
   s.add_dependency "yajl-ruby", "~> 0.8.2"
-  s.add_dependency "activesupport", "~> 3.0.10"
+  s.add_dependency "activesupport", ">= 2.3.11", "< 3.2"
   s.add_dependency "tzinfo", "~> 0.3.29"
   s.add_dependency "i18n", "~> 0.6.0"
   s.add_dependency "dalli", "~> 1.0.5"
+  s.add_dependency "lrucache", "~> 0.1.0"
 
   s.add_development_dependency "rspec", "~> 2.6.0"
   s.add_development_dependency "simplecov", "~> 0.4.2"

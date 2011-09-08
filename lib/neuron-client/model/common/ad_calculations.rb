@@ -91,7 +91,7 @@ module Neuron
           # Doesn't worry about whether or not the time is in the ad's date range.
           # Assumes ad is partitioned.
           def partitioned_hour?(time)
-            day_partitions[(time.wday * 24) + time.hour] == 'T'
+            day_partitions.at((time.wday * 24) + time.hour) == 'T'
           end
 
           # Assume time is in the time zone of the ad.

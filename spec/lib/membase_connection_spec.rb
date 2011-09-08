@@ -14,12 +14,12 @@ module Neuron
 
       describe "get(key)" do
         it "should call the expected method and return the expected value" do
-          m = MembaseConnection.allocate
           c = stub(:client)
-          m.instance_variable_set(:@client, c)
+          Dalli::Client.should_receive(:new).with('127.0.0.1:11211').and_return(c)
+          m = MembaseConnection.new('127.0.0.1:11211')
           c.should_receive(:get).with('key_value')
 
-          m.get('key_value')
+          m.get('key_value', 42)
         end
       end
     end

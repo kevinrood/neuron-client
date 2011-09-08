@@ -17,7 +17,7 @@ module Neuron
             it "should call the expected methods and return the expected value" do
               a = Ad.allocate
               a.should_receive(:time_zone).and_return('time_zone_value')
-              Time.stub_chain(:now, :in_time_zone).with('time_zone_value').and_return(Time.new(2011, 5, 6, 7, 8, 9))
+              Time.stub_chain(:now, :in_time_zone).with('time_zone_value').and_return(Time.parse("2011-05-06 07:08"))
               a.should_receive(:id).and_return(7)
               Ad.stub_chain(:connection, :get).with('count_delivery_20110506_ad_7').and_return('99.99')
 

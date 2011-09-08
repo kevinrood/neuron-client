@@ -73,7 +73,7 @@ module Neuron
             end
 
             def create(attrs={})
-              @errors = catch (:errors) do
+              @errors = catch(:errors) do
                 return create!(attrs)
               end
               nil

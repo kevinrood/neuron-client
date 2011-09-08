@@ -1,3 +1,6 @@
+require "rubygems"
+require "tzinfo"
+require "active_support" #TODO: when we upgrade to 3.x, this can be "active_support/core_ext"
 require "active_support/core_ext"
 require "neuron-client/version"
 require "neuron-client/admin_connection"
