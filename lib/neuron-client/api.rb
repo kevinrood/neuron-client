@@ -50,8 +50,8 @@ module Neuron
       def configure_membase_connection
         required(@config, :membase_servers)
         self.connection = MembaseConnection.new(config.membase_servers,
-          :local_cache_size => config[:local_cache_size],
-          :local_cache_expires => config[:local_cache_expires]
+          :local_cache_size => config.local_cache_size,
+          :local_cache_expires => config.local_cache_expires
         )
       end
 

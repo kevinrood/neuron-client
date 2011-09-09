@@ -5,7 +5,7 @@ module Neuron
   module Client
     class MembaseConnection
 
-      attr_reader :client
+      attr_reader :client, :local_cache
 
       def initialize(servers, opts={})
         @client = Dalli::Client.new(servers)
@@ -22,7 +22,7 @@ module Neuron
 
       def fetch(key, ttl=nil, options=nil, &callback)
         @local_cache.fetch(key, local_ttl(ttl)) do
-          @client.fetch(key, options, &callback)
+          @client.fetch(key, ttl, options, &callback)
         end
       end
 
