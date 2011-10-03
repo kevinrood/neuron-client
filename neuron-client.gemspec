@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "yajl-ruby", "~> 0.8.2"
   s.add_dependency "activesupport", ">= 2.3.11", "< 3.2"
   s.add_dependency "tzinfo", "~> 0.3.29"
-  s.add_dependency "i18n", "~> 0.6.0"
+  s.add_dependency "i18n", ">= 0.5.0", "< 0.7"
   s.add_dependency "dalli", "~> 1.0.5"
   s.add_dependency "lrucache", "~> 0.1.0"
 
