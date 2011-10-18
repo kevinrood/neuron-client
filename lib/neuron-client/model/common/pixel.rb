@@ -8,9 +8,6 @@ module Neuron
           resource_name("pixel")
           resources_name("pixels")
 
-          # related ads
-          attr_accessor :ad_ids
-
           # time stamps
           attr_accessor :created_at, :updated_at
 

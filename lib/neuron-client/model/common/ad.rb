@@ -21,6 +21,8 @@ module Neuron
               :daily_cap, :day_partitions, :ideal_impressions_per_hour,
             # range
               :start_datetime, :end_datetime, :time_zone,
+            # related pixels
+              :pixel_ids,
             # timestamps
               :created_at, :updated_at
 
