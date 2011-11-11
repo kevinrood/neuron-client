@@ -19,9 +19,12 @@ module Neuron
         describe AdCalculations do
           context "given an Ad with date range Sat, 01 Jan 2011, 00:00 -> Tue, 01 Feb 2011, 12:00; Beijing time; Day parted for 9:00 - 17:00, M-F; Daily cap of 10; Overall cap of 100; total_impressed of 50; today_impressed of 5" do
             before(:each) do
+              @time_zone = "Beijing"
+              Time.zone = @time_zone
+              Chronic.time_class = Time.zone
               @ad = FakeAd.new(
-                :start_datetime => Time.new(2011,1,1,0,0,0,"+08:00"),
-                :end_datetime => Time.new(2011,2,1,12,0,0,"+08:00"),
+                :start_datetime => Chronic.parse("2011-01-01 00:00"),
+                :end_datetime => Chronic.parse("2011-02-01 12:00"),
                 :time_zone => "Beijing",
                 :day_partitions => "F"*24 + ("F"*9 + "T"*8 + "F"*7)*5 + "F"*24,
                 :daily_cap => 10,
@@ -32,22 +35,22 @@ module Neuron
               )
             end
             it "should be inactive on December 10th, 2010" do
-              Timecop.freeze(Time.new(2010,12,10)) do
+              Timecop.freeze(Chronic.parse("2010-12-10")) do
                 @ad.active?.should be_false
               end
             end
             it "should be inactive on January 1st, 2011" do
-              Timecop.freeze(Time.new(2011,1,1,10,0,0,"+08:00")) do
+              Timecop.freeze(Chronic.parse("2011-01-01 10:00")) do
                 @ad.active?.should be_false
               end
             end
             it "should be inactive on January 3rd, 2011 at 5:00 AM" do
-              Timecop.freeze(Time.new(2011,1,3,5,0,0,"+08:00")) do
+              Timecop.freeze(Chronic.parse("2011-01-03 05:00")) do
                 @ad.active?.should be_false
               end
             end
             context "on January 3rd, 2011 at 10:00 AM" do
-              before(:each) { Timecop.freeze(Time.new(2011,1,3,10,0,0,"+08:00")) }
+              before(:each) { Timecop.freeze(Chronic.parse("2011-01-03 10:00")) }
               after(:each) { Timecop.return }
               it "should be active" do
                 @ad.active?.should be_true
@@ -57,7 +60,7 @@ module Neuron
               end
             end
             context "on January 3rd, 2011 at 16:00" do
-              before(:each) { Timecop.freeze(Time.new(2011,1,3,16,0,0,"+08:00")) }
+              before(:each) { Timecop.freeze(Chronic.parse("2011-1-3 16:00")) }
               after(:each) { Timecop.return }
               it "should be active" do
                 @ad.active?.should be_true
@@ -67,7 +70,7 @@ module Neuron
               end
             end
             context "on January 27th, 2011 at 16:00" do
-              before(:each) { Timecop.freeze(Time.new(2011,1,27,16,0,0,"+08:00")) }
+              before(:each) { Timecop.freeze(Chronic.parse("2011-1-27 16:00")) }
               after(:each) { Timecop.return }
               it "should be active" do
                 @ad.active?.should be_true
@@ -77,7 +80,7 @@ module Neuron
               end
             end
             it "should be inactive on February 1st, 2011 at 13:00" do
-              Timecop.freeze(Time.new(2011,2,1,13,0,0,"+08:00")) do
+              Timecop.freeze(Chronic.parse("2011-2-1 13:00")) do
                 @ad.active?.should be_false
               end
             end

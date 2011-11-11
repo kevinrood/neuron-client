@@ -6,7 +6,9 @@ module Neuron
           describe "Zone.all" do
             context "when connection.get returns a value" do
               it "should call the expected methods and return the expected result" do
-                Zone.stub_chain(:connection, :get).with('Zone:7').and_return('{"zone":{"attr":"value","attr2":"value2"}}')
+                conn = MembaseConnection.new("example.com:11211")
+                Zone.stub(:connection).and_return(conn)
+                conn.stub(:get).with('Zone:7').and_return('{"zone":{"attr":"value","attr2":"value2"}}')
                 z = stub(:zone)
                 Zone.should_receive(:new).with({'attr' => 'value', 'attr2' => 'value2'}).and_return(z)
 
@@ -15,7 +17,9 @@ module Neuron
             end
             context "when connection.get returns nil" do
               it "should call the expected methods and return nil" do
-                Zone.stub_chain(:connection, :get).with('Zone:7').and_return(nil)
+                conn = MembaseConnection.new("example.com:11211")
+                Zone.stub(:connection).and_return(conn)
+                conn.stub(:get).with('Zone:7').and_return(nil)
 
                 Zone.find(7).should be_nil
               end

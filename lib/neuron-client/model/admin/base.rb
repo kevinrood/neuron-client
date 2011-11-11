@@ -51,7 +51,7 @@ module Neuron
           end
 
           def destroy
-            self.class.connection.delete("#{superclass.resources_name}/#{id}")
+            self.class.connection.delete("#{self.class.superclass.resources_name}/#{id}")
           end
 
           def self.included(base)

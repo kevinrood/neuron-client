@@ -6,6 +6,7 @@ module Neuron
       class BlockedReferer < Base; end
       class BlockedUserAgent < Base; end
       class GeoTarget < Base; end
+      class Pixel < Base; end
       class Report < Base; end
       class S3File < Base; end
       class Zone < Base; end

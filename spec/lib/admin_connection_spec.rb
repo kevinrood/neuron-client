@@ -1,6 +1,16 @@
 module Neuron
   module Client
     describe AdminConnection do
+      
+      def stub_rest_client(receive, with_args, yield_args)
+        expectation = RestClient.should_receive(receive).with(*with_args)
+        if RUBY_VERSION =~ /^1\.8\./
+          expectation.and_yield(yield_args)
+        elsif RUBY_VERSION =~ /^1\.9\./
+          expectation.and_yield(*yield_args)
+        end
+      end
+
       before(:each) do
         @ac = AdminConnection.new('url', 'key')
         @response = mock(:response, :code=>200, :to_str=>"{}")
@@ -17,7 +27,7 @@ module Neuron
       describe "query_string(attrs={})" do
         it "should return the expected value" do
           @ac.query_string({}).should == "api_key=key"
-          @ac.query_string(:foo=>'foo').should == "api_key=key&foo=foo"
+          @ac.query_string(:foo=>'foo').split('&').sort.should == ["api_key=key","foo=foo"]
         end
       end
 
@@ -25,7 +35,7 @@ module Neuron
         context "when response.code is 200" do
           context "when the format is :json" do
             it "should call the expected methods and return the expected value" do
-              RestClient.should_receive(:get).with("url/json?api_key=key", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+              stub_rest_client(:get, ["url/json?api_key=key", {:content_type=>:json, :accept=>:json}], [@response, @request, @result])
               @ac.get().should == Yajl.load(@response.to_str)
             end
           end
@@ -33,7 +43,7 @@ module Neuron
         context "when response.code is not 200" do
           it "it should raise an error" do
             @response.should_receive(:code).twice.and_return(500)
-            RestClient.should_receive(:get).with("url/json?api_key=key", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+            stub_rest_client(:get,["url/json?api_key=key", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
             lambda{
               @ac.get()              
             }.should raise_error
@@ -46,14 +56,14 @@ module Neuron
           context "when the format is :json" do
             it "should call the expected methods and return the expected value" do
               @response.should_receive(:code).and_return(201)
-              RestClient.should_receive(:post).with("url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+              stub_rest_client(:post,["url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
               @ac.post().should == Yajl.load(@response.to_str)
             end
           end
           context "when the format is not :json" do
             it "should call the expected methods and return the expected value" do
               @response.should_receive(:code).and_return(201)
-              RestClient.should_receive(:post).with("url/path.html?api_key=key", "{}", {:content_type=>:html, :accept=>:html}).and_yield(@response, @request, @result)
+              stub_rest_client(:post,["url/path.html?api_key=key", "{}", {:content_type=>:html, :accept=>:html}],[@response, @request, @result])
               @ac.post(:path, "{}", :format=>:html).should == @response.to_str
             end
           end
@@ -62,7 +72,7 @@ module Neuron
           context "when the format is :json" do
             it "should throw the expected symbol and object" do
               @response.should_receive(:code).and_return(422)
-              RestClient.should_receive(:post).with("url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+              stub_rest_client(:post, ["url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
               lambda{
                 @ac.post()
               }.should raise_error
@@ -71,7 +81,7 @@ module Neuron
           context "when the format is not :json" do
             it "should throw the expected symbol and object" do
               @response.should_receive(:code).and_return(422)
-              RestClient.should_receive(:post).with("url/path.html?api_key=key", "{}", {:content_type=>:html, :accept=>:html}).and_yield(@response, @request, @result)
+              stub_rest_client(:post, ["url/path.html?api_key=key", "{}", {:content_type=>:html, :accept=>:html}],[@response, @request, @result])
               lambda{
                 @ac.post(:path, "{}", :format=>:html)
               }.should raise_error
@@ -81,7 +91,7 @@ module Neuron
         context "when response.code is not 201 or 422" do
           it "should raise an error" do
             @response.should_receive(:code).and_return(500)
-            RestClient.should_receive(:post).with("url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+            stub_rest_client(:post,["url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
             lambda{
               @ac.post()
             }.should raise_error
@@ -94,14 +104,14 @@ module Neuron
           context "when the format is :json" do
             it "should call the expected methods and return the expected value" do
               @response.should_receive(:code).and_return(200)
-              RestClient.should_receive(:put).with("url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+              stub_rest_client(:put,["url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
               @ac.put().should == Yajl.load(@response.to_str)
             end
           end
           context "when the format is not :json" do
             it "should call the expected methods and return the expected value" do
               @response.should_receive(:code).and_return(200)
-              RestClient.should_receive(:put).with("url/path.html?api_key=key", "{}", {:content_type=>:html, :accept=>:html}).and_yield(@response, @request, @result)
+              stub_rest_client(:put,["url/path.html?api_key=key", "{}", {:content_type=>:html, :accept=>:html}],[@response, @request, @result])
               @ac.put(:path, "{}", :format=>:html).should == @response.to_str
             end
           end
@@ -110,7 +120,7 @@ module Neuron
           context "when the format is :json" do
             it "should throw the expected symbol and object" do
               @response.should_receive(:code).and_return(422)
-              RestClient.should_receive(:put).with("url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+              stub_rest_client(:put,["url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
               lambda{
                 @ac.put()
               }.should raise_error
@@ -119,7 +129,7 @@ module Neuron
           context "when the format is not :json" do
             it "should throw the expected symbol and object" do
               @response.should_receive(:code).and_return(422)
-              RestClient.should_receive(:put).with("url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+              stub_rest_client(:put,["url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
               lambda{
                 @ac.put()
               }.should raise_error
@@ -129,7 +139,7 @@ module Neuron
         context "when response.code is not 200 or 422" do
           it "should raise an error" do
             @response.should_receive(:code).and_return(500)
-            RestClient.should_receive(:put).with("url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+            stub_rest_client(:put,["url/json?api_key=key", "{}", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
             lambda{
               @ac.put()
             }.should raise_error
@@ -142,14 +152,14 @@ module Neuron
           context "when format is :json" do
             it "should call the expected methods and return the expected value" do
               @response.should_receive(:code).and_return(200)
-              RestClient.should_receive(:delete).with("url/path.json?api_key=key", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+              stub_rest_client(:delete,["url/path.json?api_key=key", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
               @ac.delete(:path).should == Yajl.load(@response.to_str)
             end
           end
           context "when format is not :json" do
             it "should call the expected methods and return the expected value" do
               @response.should_receive(:code).and_return(200)
-              RestClient.should_receive(:delete).with("url/path.html?api_key=key", {:content_type=>:html, :accept=>:html}).and_yield(@response, @request, @result)
+              stub_rest_client(:delete,["url/path.html?api_key=key", {:content_type=>:html, :accept=>:html}],[@response, @request, @result])
               @ac.delete(:path, :format=>:html).should == @response.to_str
             end
           end
@@ -157,7 +167,7 @@ module Neuron
         context "when response.code is not 200" do
           it "should raise an error" do
             @response.should_receive(:code).and_return(500)
-            RestClient.should_receive(:delete).with("url/json?api_key=key", {:content_type=>:json, :accept=>:json}).and_yield(@response, @request, @result)
+            stub_rest_client(:delete,["url/json?api_key=key", {:content_type=>:json, :accept=>:json}],[@response, @request, @result])
             lambda{
               @ac.delete()
             }.should raise_error

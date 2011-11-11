@@ -9,7 +9,7 @@ module Neuron
         end
 
         def method_missing(meth, *args, &block)
-          (@proxied_model.methods.include?(meth) ? @proxied_model.send(meth, *args, &block) : super)
+          (@proxied_model.respond_to?(meth) ? @proxied_model.send(meth, *args, &block) : super)
         end
 
         class << self
@@ -29,7 +29,7 @@ module Neuron
           end
 
           def method_missing(meth, *args, &block)
-            (class_to_proxy.methods.include?(meth) ? class_to_proxy.send(meth, *args, &block) : super)
+            (class_to_proxy.respond_to?(meth) ? class_to_proxy.send(meth, *args, &block) : super)
           end
         end
       end

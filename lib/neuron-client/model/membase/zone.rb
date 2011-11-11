@@ -14,11 +14,13 @@ module Neuron
 
           class << self
             def find(id)
-              zone = nil
-              membase_key = "Zone:#{id}"
-              cached_json = self.connection.get(membase_key)
-              zone = self.new(Yajl.load(cached_json)[superclass.resource_name]) if cached_json.present?
-              zone
+              self.connection.local_cache.fetch("Neuron::Client::Model::Zone:#{id}") do
+                zone = nil
+                membase_key = "Zone:#{id}"
+                cached_json = self.connection.get(membase_key)
+                zone = self.new(Yajl.load(cached_json)[superclass.resource_name]) if cached_json.present?
+                zone
+              end
             end
           end
         end
