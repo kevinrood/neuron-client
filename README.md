@@ -42,12 +42,12 @@ Zones
 
 Create a zone:
 
-    zone = Neuron::Client::Model::Zone.new(:slug => 'test', :response_type => 'Redirect')
+    zone = Neuron::Client::Model::Zone.new(:name => 'test', :response_type => 'Redirect')
     zone.save
 
 ... or simply:
     
-    Neuron::Client::Model::Zone.create(:slug => 'test', :response_type => 'Redirect')
+    Neuron::Client::Model::Zone.create(:name => 'test', :response_type => 'Redirect')
 
 List all zones:
 
