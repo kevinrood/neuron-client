@@ -1,7 +1,8 @@
 require 'simplecov'
 SimpleCov.start do
   add_filter "/spec/"
-  add_group "Models", "lib"
+  add_group "Schema", "schema"
+  add_group "Models", "model"
 end
 
 require 'rubygems'

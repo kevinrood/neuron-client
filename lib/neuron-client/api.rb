@@ -10,12 +10,17 @@ module Neuron
 
         configure_admin_connection if config.connection_type == :admin
         configure_membase_connection if config.connection_type == :membase
+        @validate = (config.validate != false)
 
         self
       end
 
       def connection_type
         @config.connection_type
+      end
+
+      def validate?
+        @validate != false
       end
 
       private

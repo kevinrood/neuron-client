@@ -1,5 +1,239 @@
 module Neuron
+  module Schema
+    class TestModel
+      SCHEMA = self.new
+      def index; {}; end
+      def show; {}; end
+      def create; {} end
+      def update; {} end
+    end
+  end
   module Client
+    class TestModel
+      include Base
+      def attributes
+        []
+      end
+    end
+
+    describe AdminConnection do
+      before(:each) do
+        @connection = stub(:connection)
+        API.stub(:default_api).and_return(stub(:default_api, :connection => @connection, :connection_type => :admin, :validate? => true))
+      end
+      
+      describe "update_attributes" do
+        it "should return false when errors occur for updated objects" do
+          @connection.should_receive(:put).with("test_models/1", {'test_model' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          TestModel.new(:id => 1).update_attributes({}).should be_false
+        end
+
+        it "should provide access to errors when validation fails" do
+          @connection.should_receive(:put).with("test_models/1", {'test_model' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          c = TestModel.new(:id => 1)
+          c.update_attributes({}).should be_false
+          c.errors.should == {:error => "is required"}
+        end
+
+        it "should return true when errors do not occur for updated objects" do
+          @connection.should_receive(:put).with("test_models/1", {'test_model' => {}}).and_return({'test_model' => {}})
+
+          TestModel.new(:id => 1).update_attributes({}).should be_true
+        end
+      end
+
+      describe "save" do
+        it "should return false when errors occur for new objects" do
+          @connection.should_receive(:post).with("test_models", {'test_model' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          TestModel.new.save.should be_false
+        end
+
+        it "should provide access to errors when validation fails" do
+          @connection.should_receive(:post).with("test_models", {'test_model' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          c = TestModel.new
+          c.save.should be_false
+          c.errors.should == {:error => "is required"}
+        end
+
+        it "should return true when errors do not occur for new objects" do
+          @connection.should_receive(:post).with("test_models", {'test_model' => {}}).and_return({'test_model' => {:id => 1}})
+
+          TestModel.new.save.should be_true
+        end 
+
+        it "should return false when errors occur for existing objects" do
+          @connection.should_receive(:put).with('test_models/1', {'test_model' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          TestModel.new(:id => 1).save.should be_false
+        end
+
+        it "should provide access to errors when validation fails" do
+          @connection.should_receive(:put).with("test_models/1", {'test_model' => {}}) do
+            throw :errors, {:error => "is required"}
+          end 
+
+          c = TestModel.new(:id => 1)
+          c.save.should be_false
+          c.errors.should == {:error => "is required"}
+        end
+
+        it "should return true when errors do not occur for existing objects" do
+          @connection.should_receive(:put).with("test_models/1", {'test_model' => {}}).and_return({'test_model' => {:id => 1}})
+
+          TestModel.new(:id => 1).save.should be_true
+        end
+      end
+
+      describe "create" do
+        it "should return nil when errors occur" do
+          @connection.should_receive(:post).with("test_models", {'test_model' => {}}) do
+            throw :errors, {:error => "is_required"}
+          end
+
+          TestModel.create({}).should be_nil
+        end
+
+        it "should return the created object when no errors occur" do
+          @connection.should_receive(:post).with("test_models", {'test_model' => {}}).and_return({'test_model' => {:id => 1}})
+
+          TestModel.create({}).should be_a TestModel
+        end
+      end
+
+      describe "create!" do
+        it "should return nil when errors occur" do
+          @connection.should_receive(:post).with("test_models", {'test_model' => {}}) do
+            throw :errors, {:error => "is_required"}
+          end
+
+          errors = catch(:errors) do
+            TestModel.create!({})
+            nil
+          end
+          errors.should_not be_nil
+          errors.should == {:error => 'is_required'}
+        end
+
+        it "should return the created object when no errors occur" do
+          @connection.should_receive(:post).with("test_models", {'test_model' => {}}).and_return({'test_model' => {:id => 1}})
+
+          TestModel.create!({}).should be_a TestModel
+        end
+      end
+    end
+
+    describe AdminConnection do
+      before(:each) do
+        @connection = AdminConnection.new('http://neuron.admin', "my_api_key")
+      end
+
+      it "should escape the passed api_key" do
+        connection = AdminConnection.new("http://neuron.admin", "an unescaped string")
+        FakeWeb.register_uri(:get, "http://neuron.admin/test.json?api_key=an+unescaped+string", :body => Yajl.dump({"escaped" => true}))
+        connection.get("test").should == {"escaped" => true}
+      end
+
+      describe "get" do
+        it "should make a GET request to the specified url passing an API key" do
+          FakeWeb.register_uri(:get, "http://neuron.admin/test.json", :body => "ERROR", :status => ["403", "Unauthorized"])
+          FakeWeb.register_uri(:get, "http://neuron.admin/test.json?api_key=my_api_key", :body => "{}")
+          @connection.get("test").should == {}
+        end
+
+        it "should GET an error if the wrong api_key is passed" do
+          FakeWeb.register_uri(:get, "http://neuron.admin/test.json?api_key=new_api_key", :body => "{}")
+          FakeWeb.register_uri(:get, "http://neuron.admin/test.json?api_key=my_api_key", :body => "ERROR", :status => ["403", "Unauthorized"])
+          lambda do
+            @connection.get("test")
+          end.should raise_error
+        end
+      end
+
+      describe "post" do
+        it "should make a POST request to the specified url passing an API key" do
+          FakeWeb.register_uri(:post, "http://neuron.admin/test.json", :body => "ERROR", :status => ["403", "Unauthorized"])
+          FakeWeb.register_uri(:post, "http://neuron.admin/test.json?api_key=my_api_key", :body => "{}", :status => ["201", "Created"])
+          @connection.post("test", {:data => 1}).should == {}
+        end
+
+        it "should POST an error if the wrong api_key is passed" do
+          FakeWeb.register_uri(:post, "http://neuron.admin/test.json?api_key=new_api_key", :body => "{}", :status => ["201", "Created"])
+          FakeWeb.register_uri(:post, "http://neuron.admin/test.json?api_key=my_api_key", :body => "ERROR", :status => ["403", "Unauthorized"])
+          lambda do 
+            @connection.post("test", {:data => 1})
+          end.should raise_error
+        end
+
+        it "should throw :errors if validation fails" do
+          FakeWeb.register_uri(:post, "http://neuron.admin/test.json?api_key=my_api_key", :body => Yajl.dump({:my_field => 'is_required'}), :status => ["422", "Errors"])
+          errors = catch(:errors) do
+            value = @connection.post("test", {:data => 1})
+            nil
+          end
+          errors.should_not be_nil
+          errors.should == {'my_field' => 'is_required'}
+        end
+      end
+
+      describe "put" do
+        it "should make a PUT request to the specified url passing an API key" do
+          FakeWeb.register_uri(:put, "http://neuron.admin/test.json", :body => "ERROR", :status => ["403", "Unauthorized"])
+          FakeWeb.register_uri(:put, "http://neuron.admin/test.json?api_key=my_api_key", :body => "{}")
+          @connection.put("test", {:data => 1}).should == {}
+        end
+
+        it "should PUT an error if the wrong api_key is passed" do
+          FakeWeb.register_uri(:put, "http://neuron.admin/test.json?api_key=new_api_key", :body => "{}")
+          FakeWeb.register_uri(:put, "http://neuron.admin/test.json?api_key=my_api_key", :body => "ERROR", :status => ["403", "Unauthorized"])
+          lambda do
+            @connection.put("test", {:data => 1})
+          end.should raise_error
+        end
+
+        it "should throw :errors if validation fails" do
+          FakeWeb.register_uri(:put, "http://neuron.admin/test.json?api_key=my_api_key", :body => Yajl.dump({:my_field => 'is_required'}), :status => ["422", "Errors"])
+          errors = catch(:errors) do
+            value = @connection.put("test", {:data => 1})
+            nil
+          end
+          errors.should_not be_nil
+          errors.should == {'my_field' => 'is_required'}
+        end
+      end
+
+      describe "delete" do
+        it "should make a DELETE request to the specified url passing an API key" do
+          FakeWeb.register_uri(:delete, "http://neuron.admin/test.json", :body => "ERROR", :status => ["403", "Unauthorized"])
+          FakeWeb.register_uri(:delete, "http://neuron.admin/test.json?api_key=my_api_key", :body => "{}")
+          @connection.delete("test").should == {}
+        end
+
+        it "should DELETE an error if the wrong api_key is passed" do
+          FakeWeb.register_uri(:delete, "http://neuron.admin/test.json?api_key=new_api_key", :body => "{}")
+          FakeWeb.register_uri(:delete, "http://neuron.admin/test.json?api_key=my_api_key", :body => "ERROR", :status => ["403", "Unauthorized"])
+          lambda do
+            @connection.delete("test")
+          end.should raise_error
+        end
+      end
+    end
+
+
+
     describe AdminConnection do
       
       def stub_rest_client(receive, with_args, yield_args)

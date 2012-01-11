@@ -24,6 +24,9 @@ Gem::Specification.new do |s|
   s.add_dependency "i18n", ">= 0.5.0", "< 0.7"
   s.add_dependency "dalli", ">= 1.0.5", "< 1.2"
   s.add_dependency "lrucache", "~> 0.1.0"
+  s.add_dependency "map", ">= 4.2.0", "< 5"
+  s.add_dependency "deep_merge", "~> 1.0.0"
+  s.add_dependency "json-schema", "~> 0.9.12"
 
   s.add_development_dependency "rspec", "~> 2.7.0"
   s.add_development_dependency "simplecov", "~> 0.5.4"

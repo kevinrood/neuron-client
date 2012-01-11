@@ -7,74 +7,38 @@ require "neuron-client/admin_connection"
 require "neuron-client/membase_connection"
 require "neuron-client/api"
 
-require "neuron-client/model/common/base"
-require "neuron-client/model/common/ad_calculations"
-require "neuron-client/model/common/ad"
-require "neuron-client/model/common/ad_zone"
-require "neuron-client/model/common/blocked_referer"
-require "neuron-client/model/common/blocked_user_agent"
-require "neuron-client/model/common/geo_target"
-require "neuron-client/model/common/pixel"
-require "neuron-client/model/common/report"
-require "neuron-client/model/common/s3_file"
-require "neuron-client/model/common/zone_calculations"
-require "neuron-client/model/common/zone"
-
-require "neuron-client/model/admin/base"
-require "neuron-client/model/admin/ad"
-require "neuron-client/model/admin/ad_zone"
-require "neuron-client/model/admin/blocked_referer"
-require "neuron-client/model/admin/blocked_user_agent"
-require "neuron-client/model/admin/geo_target"
-require "neuron-client/model/admin/pixel"
-require "neuron-client/model/admin/report"
-require "neuron-client/model/admin/s3_file"
-require "neuron-client/model/admin/zone"
-
-require "neuron-client/model/membase/ad"
-require "neuron-client/model/membase/ad_zone"
-require "neuron-client/model/membase/blocked_referer"
-require "neuron-client/model/membase/blocked_user_agent"
-require "neuron-client/model/membase/geo_target"
-require "neuron-client/model/membase/pixel"
-require "neuron-client/model/membase/report"
-require "neuron-client/model/membase/s3_file"
-require "neuron-client/model/membase/zone"
-
 require "neuron-client/model/base"
-require "neuron-client/model/models"
+require "neuron-client/model/ad_calculations"
+require "neuron-client/model/ad"
+require "neuron-client/model/ad_zone"
+require "neuron-client/model/blocked_referer"
+require "neuron-client/model/blocked_user_agent"
+require "neuron-client/model/geo_target"
+require "neuron-client/model/pixel"
+require "neuron-client/model/report"
+require "neuron-client/model/s3_file"
+require "neuron-client/model/zone_calculations"
+require "neuron-client/model/zone"
+
+require "neuron-client/schema/common.rb"
+require "neuron-client/schema/ad.rb"
+require "neuron-client/schema/ad_zone.rb"
+require "neuron-client/schema/blocked_referer.rb"
+require "neuron-client/schema/blocked_user_agent.rb"
+require "neuron-client/schema/geo_target.rb"
+require "neuron-client/schema/pixel.rb"
+require "neuron-client/schema/report.rb"
+require "neuron-client/schema/s3_file.rb"
+require "neuron-client/schema/zone.rb"
 
 class Object
   def blank?
     return true if self.nil?
-    return true if self.respond_to?(:empty) && self.empty?
+    return true if self.respond_to?(:empty?) && self.empty?
     false
   end
 
   def present?
     !self.blank?
-  end
-end
-
-# lifted completely from the ruby facets gem source:
-# /lib/core-uncommon/facets/module/cattr.rb
-def Module
-  def cattr_writer(*syms)
-    syms.flatten.each do |sym|
-      module_eval(<<-EOS, __FILE__, __LINE__)
-        unless defined? @@#{sym}
-          @@#{sym} = nil
-        end
-
-        def self.#{sym}=(obj)
-          @@#{sym} = obj
-        end
-
-        def #{sym}=(obj)
-          @@#{sym}=(obj)
-        end
-      EOS
-    end
-    return syms
   end
 end
