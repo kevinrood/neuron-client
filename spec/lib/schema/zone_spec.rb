@@ -58,7 +58,7 @@ module Neuron
           }}, :against => Zone::SCHEMA.create)
         end
 
-        it "should approve an example iris zone" do
+        it "should approve an example iris 2.0 zone" do
           validate({"zone" => {
             "name" => "example_iris_zone",
             "response_type" => "Iris",
@@ -67,9 +67,23 @@ module Neuron
             "mute" => "No",
             "autoplay" => "Yes",
             "channel" => "drivel",
+            "template_slug" => "300x250"
+          }}, :against => Zone::SCHEMA.create)
+        end
+
+        it "should approve an example iris 2.5 zone" do
+          validate({"zone" => {
+            "name" => "example_iris_zone",
+            "response_type" => "Iris",
+            "ad_links" => {},
+            "expand" => "Yes",
+            "channel" => "drivel",
             "template_slug" => "300x250",
-            "text_overlay" => "Yes",
-            "nami_feed_url" => "http://example.com/"
+            "playlist_mode" => "MAXI",
+            "playback_mode" => "AUTO",
+            "volume" => "10",
+            "color" => "#FF0000",
+            "iris_version" => "2_5"
           }}, :against => Zone::SCHEMA.create)
         end
 
@@ -118,7 +132,7 @@ module Neuron
           }}, :against => Zone::SCHEMA.show)
         end
 
-        it "should approve an example iris zone" do
+        it "should approve an example iris 2.0 zone" do
           validate({"zone" => {
             "name" => "example_iris_zone",
             "response_type" => "Iris",
@@ -128,8 +142,27 @@ module Neuron
             "autoplay" => "Yes",
             "channel" => "drivel",
             "template_slug" => "300x250",
-            "text_overlay" => "No",
-            "nami_feed_url" => nil,
+            "created_at" => @datetime,
+            "updated_at" => @datetime,
+            "id" => "abc123"
+          }}, :against => Zone::SCHEMA.show)
+        end
+
+        it "should approve an example iris 2.5 zone" do
+          validate({"zone" => {
+            "name" => "example_iris_zone",
+            "response_type" => "Iris",
+            "ad_links" => {},
+            "expand" => "Yes",
+            "channel" => "drivel",
+            "template_slug" => "300x250",
+            "playlist_mode" => "MAXI",
+            "playback_mode" => "AUTO",
+            "volume" => "10",
+            "color" => "#FF0000",
+            "overlay_provider" => "NAMI",
+            "overlay_feed_url" => "http://example.com/",
+            "iris_version" => "2_5",
             "created_at" => @datetime,
             "updated_at" => @datetime,
             "id" => "abc123"
@@ -188,7 +221,7 @@ module Neuron
           }}, :against => Zone::SCHEMA.update)
         end
 
-        it "should approve an example iris zone" do
+        it "should approve an example iris 2.0 zone" do
           validate({"zone" => {
             "name" => "example_iris_zone",
             "response_type" => "Iris",
@@ -197,9 +230,26 @@ module Neuron
             "mute" => "No",
             "autoplay" => "Yes",
             "channel" => "drivel",
-            "text_overlay" => "No",
-            "nami_feed_url" => nil,
             "template_slug" => "300x250",
+            "id" => "abc123"
+          }}, :against => Zone::SCHEMA.update)
+        end
+
+        it "should approve an example iris 2.5 zone" do
+          validate({"zone" => {
+            "name" => "example_iris_zone",
+            "response_type" => "Iris",
+            "ad_links" => {},
+            "expand" => "Yes",
+            "channel" => "drivel",
+            "template_slug" => "300x250",
+            "playlist_mode" => "MAXI",
+            "playback_mode" => "AUTO",
+            "volume" => "10",
+            "color" => "#FF0000",
+            "overlay_provider" => "NAMI",
+            "overlay_feed_url" => "http://example.com/",
+            "iris_version" => "2_5",
             "id" => "abc123"
           }}, :against => Zone::SCHEMA.update)
         end

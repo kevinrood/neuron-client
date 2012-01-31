@@ -11,7 +11,14 @@ module Neuron
       VAST = "Vast"
       RESPONSE_TYPES = [REDIRECT, IRIS, VAST]
 
-      TEMPLATE_SLUGS = ["300x250", "300x600"]
+      IRIS_2_0 = '2_0'
+      IRIS_2_5 = '2_5'
+      IRIS_VERSIONS = [IRIS_2_0, IRIS_2_5]
+      TEMPLATE_SLUGS = ['300x250']
+      PLAYLIST_MODES = ['MAXI', 'MINI']
+      PLAYBACK_MODE_OPTIONS = [['Auto Play', 'AUTO'], ['Click To Play','CTP'], ['Rollover To Play', 'RTP']]
+      PLAYBACK_MODES = Hash[PLAYBACK_MODE_OPTIONS].values
+      OVERLAY_PROVIDERS = ['NAMI', 'PREDICTV']
 
       ATTRIBUTES = [
         :id,
@@ -19,12 +26,20 @@ module Neuron
         :name,
         :response_type, # string in RESPONSE_TYPES
         :template_slug, # nil, or string in TEMPLATE_SLUGS
-        :mute,          # nil, or "Yes" or "No"
-        :autoplay,      # nil, or "Yes" or "No"
         :channel,       # nil, or slug
         :expand,        # nil, or "Yes" or "No"
-        :text_overlay,  # nil, or "Yes" or "No"
-        :nami_feed_url, # nil, or string URL
+        :iris_version,  # nil, or string in IRIS_VERSIONS
+        # Iris 2.0
+        :mute,          # nil, or "Yes" or "No"
+        :autoplay,      # nil, or "Yes" or "No"
+        # Iris 2.5
+        :playlist_mode, # nil, or string in PLAYLIST_MODES
+        :volume,        # nil, or 1-100s
+        :color,         # nil, or string (hex color - '333333')
+        :playback_mode, # nil, or string in PLAYBACK_MODES
+        :overlay_provider, # nil, or string in OVERLAY_PROVIDERS
+        :overlay_feed_url, # nil, or string URL
+
         :created_at,    # string, datetime in UTC
         :updated_at,    # string, datetime in UTC
       ]

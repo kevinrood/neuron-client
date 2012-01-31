@@ -4,16 +4,21 @@ module Neuron
       before(:each) do
         @datetime = "2011-11-11T11:11:11Z"
         @minimal_attributes = {
-          'ad_links'       => nil,
-          'name'           => nil,
-          'response_type'  => nil,
-          'template_slug'  => nil,
-          'mute'           => nil,
-          'autoplay'       => nil,
-          'channel'        => nil,
-          'expand'         => nil,
-          'text_overlay'   => nil,
-          'nami_feed_url'  => nil,
+          'ad_links'         => nil,
+          'name'             => nil,
+          'response_type'    => nil,
+          'iris_version'     => nil,
+          'template_slug'    => nil,
+          'mute'             => nil,
+          'autoplay'         => nil,
+          'channel'          => nil,
+          'expand'           => nil,
+          'playlist_mode'    => nil,
+          'volume'           => nil,
+          'color'            => nil,
+          'playback_mode'    => nil,
+          'overlay_provider' => nil,
+          'overlay_feed_url' => nil,
         }
       end
       context "when connected to the admin server" do
