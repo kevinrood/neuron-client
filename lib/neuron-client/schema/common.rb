@@ -13,7 +13,7 @@ module Neuron
         def validate!(schema_name, data)
           JSON::Validator.validate!(schema.send(schema_name), data)
         rescue Exception => e
-          puts "Data: #{data}"
+          e.message << "\nSchema: #{schema.class.name}::SCHEMA.#{schema_name}\nData: #{data.inspect}"
           raise e
         end
       end
