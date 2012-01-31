@@ -68,17 +68,25 @@ module Neuron
 
       STATISTIC_TYPES = %w(selections undeliveries impressions redirects clicks)
 
-      def recent(statistic, by=nil)
+      def recent(statistic, parameters={})
         connected_to_admin!
+        by = (parameters[:by] || parameters['by']).to_s
+        minutes = parameters[:minutes] || parameters['minutes']
+        parameters = {}
+        parameters['by'] = by unless by.blank?
+        parameters['minutes'] = minutes.to_i if minutes.to_i > 0
         if validate?
           unless STATISTIC_TYPES.include?(statistic.to_s)
             raise "Unsupported statistic: #{statistic}"
           end
-          unless by.nil? || by.to_s == 'zone'
+          unless by.blank? || by == 'zone'
             raise "Unsupported by: #{by}"
           end
+          unless minutes.blank? || minutes.to_i > 0
+            raise "Unsupported minutes: #{minutes}"
+          end
         end
-        parameters = by.nil? ? {} : {'by' => by.to_s}
+
         connection.get("ads/#{id}/recent/#{statistic}", parameters)
       end
 

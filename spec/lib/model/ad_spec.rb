@@ -178,7 +178,7 @@ module Neuron
             ad = Ad.new(@minimal_attributes.merge('id' => 7))
             @connection.should_receive(:get).with('ads/7/recent/impressions', {'by' => 'zone'}).and_return('return_value')
 
-            ad.recent('impressions', 'zone').should == 'return_value'
+            ad.recent('impressions', :by => 'zone').should == 'return_value'
           end
         end
 

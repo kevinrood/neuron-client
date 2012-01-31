@@ -95,7 +95,12 @@ module Neuron
         # data : the serializable object that should match the given schema
         def validate_against_schema!(schema_name, data)
           if validate? && data.present?
-            JSON::Validator.validate!(schema.send(schema_name), data)
+            begin
+              JSON::Validator.validate!(schema.send(schema_name), data)
+            rescue Exception => e
+              e.message << "\nSchema: #{schema.class.name}::SCHEMA.#{schema_name}\nData: #{data.inspect}"
+              raise e
+            end
           end
         end
 
