@@ -77,7 +77,7 @@ module Neuron
           :volume           => SCHEMA.volume,
           :color            => SCHEMA.color(:required => false),
           :playback_mode    => SCHEMA.playback_mode,
-          :overlay_provider => SCHEMA.overlay_provider(:required => false),
+          :overlay_provider => SCHEMA.overlay_provider(:type => %w(null string), :required => false),
           :overlay_feed_url => SCHEMA.url(:type => %w(null string), :required => false)
         }))
       end
@@ -121,7 +121,7 @@ module Neuron
           :volume           => SCHEMA.volume,
           :color            => SCHEMA.color,
           :playback_mode    => SCHEMA.playback_mode,
-          :overlay_provider => SCHEMA.overlay_provider,
+          :overlay_provider => SCHEMA.overlay_provider(:type => %w(null string)),
           :overlay_feed_url => SCHEMA.url(:type => %w(null string))
         }))
       end
@@ -165,7 +165,7 @@ module Neuron
           :volume           => SCHEMA.volume(:required => false),
           :color            => SCHEMA.color(:required => false),
           :playback_mode    => SCHEMA.playback_mode(:required => false),
-          :overlay_provider => SCHEMA.overlay_provider(:required => false),
+          :overlay_provider => SCHEMA.overlay_provider(:type => %w(null string), :required => false),
           :overlay_feed_url => SCHEMA.url(:type => %w(null string), :required => false)
         }))
       end
