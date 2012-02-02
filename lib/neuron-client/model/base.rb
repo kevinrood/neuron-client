@@ -50,7 +50,7 @@ module Neuron
           @errors = catch :errors do
             return create!(attrs)
           end
-          nil
+          from_hash(resource_name => {'errors' => @errors})
         end
 
         def create!(attrs={})
