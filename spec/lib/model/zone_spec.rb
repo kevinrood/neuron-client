@@ -113,9 +113,9 @@ module Neuron
         describe "recent(statistic, by=nil)" do
           it "should call the expected method and return the expected result" do
             zone = Zone.new(@minimal_attributes.merge('id' => 'z99'))
-            @connection.should_receive(:get).with('zones/z99/recent/impressions', {'by' => 'zone'}).and_return('return_value')
+            @connection.should_receive(:get).with('zones/z99/recent/impressions', {'by' => 'ad'}).and_return('return_value')
 
-            zone.recent('impressions', :by => 'zone').should == 'return_value'
+            zone.recent('impressions', :by => 'ad').should == 'return_value'
           end
         end
 

@@ -58,7 +58,17 @@ module Neuron
         Ad.find(ad_id)
       end
 
-      STATISTIC_TYPES = %w(requests blocks defaults unitloads selections undeliveries impressions redirects clicks)
+      STATISTIC_TYPES = {
+        'requests' => [],
+        'blocks' => ['reason'],
+        'defaults' => [],
+        'unitloads' => [],
+        'selections' => ['ad'],
+        'undeliveries' => ['ad'],
+        'impressions' => ['ad'],
+        'redirects' => ['ad'],
+        'clicks' => ['ad']
+      }
 
       def recent(statistic, parameters={})
         connected_to_admin!
@@ -73,7 +83,7 @@ module Neuron
           unless STATISTIC_TYPES.include?(statistic.to_s)
             raise "Unsupported statistic: #{statistic}"
           end
-          unless by.blank? || by == 'zone'
+          unless by.blank? || STATISTIC_TYPES[statistic.to_s].include?(by.to_s)
             raise "Unsupported by: #{by}"
           end
           unless minutes.blank? || minutes.to_i > 0
