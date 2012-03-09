@@ -110,6 +110,15 @@ module Neuron
           end
         end
 
+        describe "recent(statistic, by=nil)" do
+          it "should call the expected method and return the expected result" do
+            zone = Zone.new(@minimal_attributes.merge('id' => 'z99'))
+            @connection.should_receive(:get).with('zones/z99/recent/impressions', {'by' => 'zone'}).and_return('return_value')
+
+            zone.recent('impressions', :by => 'zone').should == 'return_value'
+          end
+        end
+
         describe "unlink(ad_id)" do
           it "should call the expected method and return the expected results" do
             zone = Zone.new(@minimal_attributes.merge('id' => 'z99'))
