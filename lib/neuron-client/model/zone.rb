@@ -58,6 +58,35 @@ module Neuron
         Ad.find(ad_id)
       end
 
+      STATISTIC_TYPES = %w(requests blocks defaults unitloads selections undeliveries impressions redirects clicks)
+
+      def recent(statistic, parameters={})
+        connected_to_admin!
+        by = (parameters[:by] || parameters['by']).to_s
+        minutes = parameters[:minutes] || parameters['minutes']
+        group_by = parameters[:group_by] || parameters['group_by']
+        parameters = {}
+        parameters['by'] = by unless by.blank?
+        parameters['minutes'] = minutes.to_i if minutes.to_i > 0
+        parameters['group_by'] = group_by.to_s unless group_by.blank?
+        if validate?
+          unless STATISTIC_TYPES.include?(statistic.to_s)
+            raise "Unsupported statistic: #{statistic}"
+          end
+          unless by.blank? || by == 'zone'
+            raise "Unsupported by: #{by}"
+          end
+          unless minutes.blank? || minutes.to_i > 0
+            raise "Unsupported minutes: #{minutes}"
+          end
+          unless group_by.blank? || group_by == 'hour'
+            raise "Unsupported group_by: #{group_by}"
+          end
+        end
+
+        connection.get("zones/#{id}/recent/#{statistic}", parameters)
+      end
+
       def unlink(ad_id)
         connected_to_admin!
         validate_id!(ad_id)
