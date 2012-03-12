@@ -99,18 +99,22 @@ module Neuron
       end
 
       describe "create" do
-        it "should return nil when errors occur" do
+        it "should return object with errors when they occur" do
           @connection.should_receive(:post).with("test_models", {'test_model' => {}}) do
             throw :errors, {:error => "is_required"}
           end
-
-          TestModel.create({}).should be_nil
+          created = TestModel.create({})
+          created.should be_a TestModel
+          created.errors.should_not be_empty
+          created.id.should be_nil
         end
 
         it "should return the created object when no errors occur" do
           @connection.should_receive(:post).with("test_models", {'test_model' => {}}).and_return({'test_model' => {:id => 1}})
 
-          TestModel.create({}).should be_a TestModel
+          created = TestModel.create({})
+          created.should be_a TestModel
+          created.id.should == 1
         end
       end
 
