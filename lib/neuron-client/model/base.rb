@@ -239,7 +239,7 @@ module Neuron
             validate_against_schema!(:update, data)
             data = connection.put("#{resources_name}/#{id}", data)
           end
-          apply_attributes!(data[resource_name])
+          apply_attributes!(data[resource_name]) unless data.nil?
           []
         end
         @errors.empty?
