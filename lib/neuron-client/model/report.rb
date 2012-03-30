@@ -5,7 +5,7 @@ module Neuron
 
       TEMPLATES = %w(ad_events delivery_metrics post_activities)
 
-      STATES =  %w(WAITING RUNNING READY FAILED CANCELLED)
+      STATES =  %w(NEW WAITING RUNNING READY FAILED CANCELLED)
 
       ATTRIBUTES = [
         :id,
