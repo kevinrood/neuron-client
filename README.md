@@ -24,6 +24,10 @@ Connect to the Membase (or Memcached) Server for limited read access to some exp
   Neuron::Client::API.default_api.configure do |config|
     config.connection_type = :membase
     config.membase_servers = "127.0.0.1:11211"
+    config.local_cache_ttl = 15.minutes
+    config.local_cache_soft_ttl = 1.minute
+    config.local_cache_retry_delay = 1.second
+    config.local_cache_max_items = 10_000
   end
 
   Short form to copy and paste into console:

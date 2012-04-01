@@ -38,7 +38,9 @@ module Neuron
 
       def inclusion(obj, attrib, valid_values)
         val = obj.send(attrib)
-        raise "Inclusion: #{attrib} must be one of #{valid_values.join(', ')}" if !valid_values.include?(val)
+        if !valid_values.include?(val)
+          raise "Inclusion: #{attrib} must be one of #{valid_values.join(', ')}"
+        end
       end
 
       def configure_admin_connection
@@ -49,14 +51,16 @@ module Neuron
         rescue
           raise "Invalid admin_url: #{config.admin_url}"
         end
-        self.connection = AdminConnection.new(config.admin_url, config.admin_key)
+        self.connection = AdminConnection.new(config.admin_url,config.admin_key)
       end
 
       def configure_membase_connection
         required(@config, :membase_servers)
         self.connection = MembaseConnection.new(config.membase_servers,
-          :local_cache_size => config.local_cache_size,
-          :local_cache_expires => config.local_cache_expires
+          :local_cache_ttl => config.local_cache_ttl,
+          :local_cache_soft_ttl => config.local_cache_soft_ttl,
+          :local_cache_retry_delay => config.local_cache_retry_delay,
+          :local_cache_max_items => config.local_cache_max_items
         )
       end
 
