@@ -9,19 +9,37 @@ module Neuron
 
       def initialize(servers, opts={})
         @client = Dalli::Client.new(servers)
+        max_items   = opts[:local_cache_max_items]    || 10_000
+        ttl         = opts[:local_cache_ttl]          || 15.minutes
+        soft_ttl    = [opts[:local_cache_soft_ttl]    || 1.minute, ttl].min
+        retry_delay = [opts[:local_cache_retry_delay] || 1.second, soft_ttl].min
         @local_cache = LRUCache.new(
-          :max_items => opts[:local_cache_size],
-          :ttl => opts[:local_cache_expires] || 60.seconds)
+          :max_items => max_items,
+          :ttl => ttl,
+          :soft_ttl => soft_ttl,
+          :retry_delay => retry_delay)
       end
 
       def get(key, ttl=nil)
-        @local_cache.fetch(key, local_ttl(ttl)) do
+        ttl = local_ttl(ttl)
+        soft_ttl =[@local_cache.soft_ttl, ttl].compact.min
+        retry_delay = [@local_cache.retry_delay, soft_ttl].compact.min
+        @local_cache.fetch(key,
+                           :ttl => ttl,
+                           :soft_ttl => soft_ttl,
+                           :retry_delay => retry_delay) do
           @client.get(key)
         end
       end
 
       def fetch(key, ttl=nil, options=nil, &callback)
-        @local_cache.fetch(key, local_ttl(ttl)) do
+        ttl = local_ttl(ttl)
+        soft_ttl =[@local_cache.soft_ttl, ttl].compact.min
+        retry_delay = [@local_cache.retry_delay, soft_ttl].compact.min
+        @local_cache.fetch(key,
+                           :ttl => ttl,
+                           :soft_ttl => soft_ttl,
+                           :retry_delay => retry_delay) do
           @client.fetch(key, ttl, options, &callback)
         end
       end
