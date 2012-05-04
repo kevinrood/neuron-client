@@ -76,6 +76,8 @@ module Neuron
           case response.code
           when 200
             return (format == :json ? Yajl.load(response.to_str) : response.to_str)
+          when 204
+            return nil
           else
             raise "Error : #{response.code} - #{response.to_str}"
           end
