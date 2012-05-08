@@ -14,11 +14,12 @@ module Neuron
         entries = {}
         ad_links.each do |ad_id, link|
           next unless ad = find_ad(ad_id)
-          next unless ad.active?
+          pressure = ad.active? ? ad.pressure : nil
+          next if pressure.nil?
           weight   = link['weight'].to_f
           priority = link['priority'].to_f
           entries[priority] ||= []
-          entries[priority] << [ad_id, weighted_pressure(weight, ad.pressure)]
+          entries[priority] << [ad_id, weighted_pressure(weight, pressure)]
         end
         entries.sort_by do |priority, entry|
           priority
