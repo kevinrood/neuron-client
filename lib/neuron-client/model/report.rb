@@ -3,7 +3,7 @@ module Neuron
     class Report
       include Base
 
-      TEMPLATES = %w(ad_events delivery_metrics post_activities)
+      TEMPLATES = %w(ad_events creative_events delivery_metrics post_activities)
 
       STATES =  %w(NEW WAITING RUNNING READY FAILED CANCELLED)
 
