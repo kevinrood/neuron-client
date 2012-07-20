@@ -16,6 +16,7 @@ module Neuron
       SOCIAL_TYPES = %w(facebook googleplus twitter youtube)
       TIME_ZONES = ActiveSupport::TimeZone.all.collect{|tz| tz.name }
       FREQUENCY_CAP_WINDOWS = %w(Day Hour)
+      FREQUENCY_CAP_VALUES = (1..100).to_a
       VAST_TRACKER_TYPES = %w(impression clickTracking firstQuartile midpoint thirdQuartile complete)
 
       ATTRIBUTES = [
